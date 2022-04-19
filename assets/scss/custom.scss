@@ -1,0 +1,58 @@
+// custom.scss
+body {
+    background-color: #171717 !important;
+  }
+  
+  h1 {
+    color: white !important;
+  }
+  
+  h2 {
+    color: white !important;
+  }
+  
+  p {
+    color: white !important;
+  }
+  
+  a {
+    color: white;
+  }
+  
+  .fancy {
+    color: #2c4efe;
+  }
+  
+  // .social-icons__icon {
+  //   color: white;
+  // }
+  
+  .social-icons__icon {
+    -webkit-filter: invert(100%) !important; /* safari 6.0 - 9.0 */
+            filter: invert(100%) !important;
+  }
+  
+  .nav__list {
+    filter: invert(100%) 
+  }
+  
+  .post__title {
+    filter: invert(100%);
+  }
+  
+  .nav {
+    background-color: #171717;
+  }
+  
+  .post__footer{
+    background-color: #171717;
+  }
+  
+  .burger__container{
+    background-color: #171717;
+  }
+  
+  .burger {
+    filter: invert(100%) 
+  }
+  
