@@ -10,4 +10,4 @@ math: false
 toc: false
 ---
 
-Currently playing around with a framework called Hugo to build my personal website. If you’re reading this, that means I’ve figured out how to write my first blog post.
+Currently playing around with a framework called [Hugo](https://gohugo.io/) to build my personal website. If you’re reading this, that means I’ve figured out how to write my first blog post.
