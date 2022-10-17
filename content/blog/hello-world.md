@@ -1,5 +1,5 @@
 ---
-title: "Hello World"
+title: "Hello World 👋🏽"
 date: 2022-04-19T10:42:30+01:00
 slug: ""
 description: "First blog post using Hugo."
