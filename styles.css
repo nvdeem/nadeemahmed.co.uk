@@ -44,6 +44,21 @@ a, button { cursor: none; }
     to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes fadeInCta {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInCtaItem {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUpSoft {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* Custom Cursor */
 .cursor {
     position: fixed;
@@ -223,7 +238,7 @@ body::after {
     align-items: center;
     gap: 1.5rem;
     margin-bottom: 2.25rem;
-    animation: fadeInUp 0.8s ease-out 0.5s both;
+    animation: fadeInUpSoft 0.8s ease-out 0.5s both;
 }
 
 .cta {
@@ -235,7 +250,7 @@ body::after {
     text-decoration: none;
     position: relative;
     transition: color 0.3s var(--ease);
-    animation: fadeInUp 0.8s ease-out 0.5s both;
+    animation: fadeInUpSoft 0.8s ease-out 0.5s both;
 }
 
 .cta::after {
