@@ -25,6 +25,17 @@ html {
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* Text selection */
+::selection {
+    background: var(--white);
+    color: var(--bg);
+}
+
+::-moz-selection {
+    background: var(--white);
+    color: var(--bg);
+}
+
 /* Base */
 body {
     font-family: var(--font-sans);
@@ -71,7 +82,16 @@ a, button { cursor: none; }
     transform: translate(-50%, -50%);
     box-shadow: 0 0 10px rgba(255,255,255,0.6), 0 0 20px rgba(255,255,255,0.4), 0 0 30px rgba(255,255,255,0.2);
     opacity: 0;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, transform 0.28s var(--ease), width 0.28s var(--ease), height 0.28s var(--ease), box-shadow 0.28s var(--ease);
+}
+
+/* Invert text on hover, inspired by thebang.com */
+.cursor.cursor--invert {
+    width: 44px;
+    height: 44px;
+    background: var(--white);
+    mix-blend-mode: difference;
+    box-shadow: 0 0 8px rgba(255,255,255,0.3), 0 0 16px rgba(255,255,255,0.18);
 }
 
 .cursor-glow {

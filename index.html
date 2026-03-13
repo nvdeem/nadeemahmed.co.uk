@@ -36,10 +36,10 @@
             <p class="tagline">I sit where design and engineering intersect, turning complex problems into seamless, reliable experiences.</p>
             
             <div class="cta-row">
-                <a href="https://www.behance.net/nadeemahmed" target="_blank" rel="noopener" class="cta">
+                <a href="https://www.behance.net/nadeemahmed" target="_blank" rel="noopener" class="cta" data-cursor-invert>
                     View my work <span class="arrow">↗</span>
                 </a>
-                <a href="https://github.com/nvdeem" target="_blank" rel="noopener" class="cta">
+                <a href="https://github.com/nvdeem" target="_blank" rel="noopener" class="cta" data-cursor-invert>
                     GitHub <span class="arrow">↗</span>
                 </a>
             </div>
@@ -54,6 +54,7 @@
     (() => {
         const cursor = document.querySelector('.cursor');
         const glow = document.querySelector('.cursor-glow');
+        const hoverInvertSelector = '[data-cursor-invert]';
         let mx = 0, my = 0, cx = 0, cy = 0, gx = 0, gy = 0, visible = false;
         
         document.addEventListener('mousemove', e => {
@@ -67,7 +68,20 @@
         
         document.addEventListener('mouseleave', () => {
             cursor.style.opacity = glow.style.opacity = '0';
+            cursor.classList.remove('cursor--invert');
             visible = false;
+        });
+
+        document.addEventListener('mouseover', e => {
+            if (e.target.closest(hoverInvertSelector)) {
+                cursor.classList.add('cursor--invert');
+            }
+        });
+
+        document.addEventListener('mouseout', e => {
+            if (e.target.closest(hoverInvertSelector)) {
+                cursor.classList.remove('cursor--invert');
+            }
         });
         
         (function animate() {
