@@ -166,7 +166,7 @@ body::after {
 
 /* Layout */
 .container {
-    min-height: 100vh;
+    min-height: 85vh;
     display: flex;
     align-items: center;
     padding: 2rem;
@@ -174,7 +174,7 @@ body::after {
 
 .content {
     width: 100%;
-    max-width: 480px;
+    max-width: 600px;
     margin: 0 auto;
 }
 
@@ -247,7 +247,7 @@ body::after {
     font-size: 0.95rem;
     line-height: 1.75;
     color: var(--text-muted);
-    max-width: 400px;
+    max-width: 500px;
     margin-bottom: 1.5rem;
     animation: fadeInUp 0.8s ease-out 0.4s both;
 }
@@ -340,8 +340,253 @@ body::after {
     }
 }
 
-a:focus-visible {
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     outline: 2px solid var(--white);
     outline-offset: 4px;
     border-radius: 2px;
+}
+
+/* Work page */
+.work-main {
+    padding: 1.5rem 2rem 6rem;
+}
+
+.work-content {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.work-header { margin-bottom: 3rem; }
+
+.work-title {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(2rem, 4.5vw, 2.75rem);
+    color: var(--white);
+    text-shadow: 0 0 40px rgba(255,255,255,0.15);
+    margin-bottom: 0.75rem;
+}
+
+.work-subtitle {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: var(--text-muted);
+    max-width: 525px;
+}
+
+/* Project cards */
+.projects-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.project-card {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #0a1014;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    overflow: hidden;
+    font-family: inherit;
+    color: inherit;
+    cursor: none;
+    transition: border-color 0.3s var(--ease), background 0.3s var(--ease), transform 0.3s var(--ease);
+}
+
+.project-card:hover {
+    border-color: rgba(255,255,255,0.2);
+    background: #10171c;
+    transform: translateY(-2px);
+}
+
+/* Placeholder hero image — swap for a real project screenshot per project later.
+   Light tone on purpose: real screenshots will mostly be light-UI product shots,
+   so this reads as an image slot rather than empty space against the dark card. */
+.project-card-hero,
+.overlay-hero {
+    aspect-ratio: 16 / 9;
+    background:
+        radial-gradient(120% 140% at 20% 0%, rgba(255,255,255,0.9), transparent 55%),
+        linear-gradient(155deg, #e4e6ea 0%, #c7cad2 55%, #b3b7c2 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.project-card-body {
+    padding: 1.5rem 1.75rem 1.75rem;
+}
+
+.project-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.project-card-tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+
+.project-card-lock {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+}
+
+.project-card-lock svg {
+    width: 11px;
+    height: 11px;
+}
+
+.project-card-title {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 1.5rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+}
+
+.project-card-blurb {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.project-card-meta {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-subtle);
+    margin-top: 1.25rem;
+}
+
+/* Case study overlay */
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 2rem 7rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s var(--ease);
+}
+
+.overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.overlay-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(2,4,5,0.95);
+    cursor: none;
+}
+
+.overlay-panel {
+    position: relative;
+    width: 100%;
+    max-width: 640px;
+    max-height: 82vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: #0a1014;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    transform: translateY(16px);
+    opacity: 0;
+    transition: transform 0.4s var(--ease), opacity 0.4s var(--ease);
+}
+
+.overlay.is-open .overlay-panel {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.overlay-inner {
+    padding: 2.5rem 2.5rem 4rem;
+}
+
+.overlay-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.overlay-tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    padding: 0.3rem 0.7rem;
+}
+
+.overlay-title {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    color: var(--white);
+    margin-bottom: 1.5rem;
+}
+
+.overlay-body p {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+}
+
+.overlay-body p:last-child { margin-bottom: 0; }
+
+.overlay-close {
+    position: fixed;
+    left: 50%;
+    bottom: 2rem;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--text);
+    background: rgba(10,16,20,0.9);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 999px;
+    padding: 0.7rem 1.25rem;
+    cursor: none;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--ease), border-color 0.3s var(--ease);
+    z-index: 510;
+}
+
+.overlay.is-open .overlay-close {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.overlay-close:hover { border-color: rgba(255,255,255,0.4); }
+
+body.overlay-open { overflow: hidden; }
+
+@media (max-width: 768px) {
+    .work-main { padding: 1.5rem 1.5rem 5rem; }
+    .overlay-inner { padding: 1.75rem 1.75rem 3rem; }
 }

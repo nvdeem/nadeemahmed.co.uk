@@ -36,20 +36,42 @@
             <p class="tagline">I sit where design and engineering intersect, turning complex problems into seamless, reliable experiences.</p>
             
             <div class="cta-row">
-                <a href="https://www.behance.net/nadeemahmed" target="_blank" rel="noopener" class="cta" data-cursor-invert>
-                    View my work <span class="arrow">↗</span>
+                <a href="#work" class="cta" data-cursor-invert>
+                    View my work <span class="arrow">↓</span>
                 </a>
                 <a href="https://github.com/nvdeem" target="_blank" rel="noopener" class="cta" data-cursor-invert>
                     GitHub <span class="arrow">↗</span>
                 </a>
             </div>
-            
+
             <p class="contact">
                 Find me on <a href="https://linkedin.com/in/nadeem-a" target="_blank" rel="noopener">LinkedIn</a> or say <a href="mailto:hello@nadeemahmed.co.uk">hello@nadeemahmed.co.uk</a>
             </p>
         </div>
     </main>
-    
+
+    <section id="work" class="work-main">
+        <div class="work-content">
+            <div class="work-header">
+                <h2 class="work-title">Work</h2>
+                <p class="work-subtitle">A few selected projects. Some are password protected — get in touch if you'd like access.</p>
+            </div>
+
+            <div class="projects-grid"></div>
+        </div>
+    </section>
+
+    <div class="overlay" aria-hidden="true">
+        <div class="overlay-backdrop"></div>
+        <div class="overlay-panel" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
+            <div class="overlay-hero"></div>
+            <div class="overlay-inner" id="overlay-content"></div>
+        </div>
+        <button type="button" class="overlay-close" data-cursor-invert>✕ Close</button>
+    </div>
+
     <script src="cursor.js"></script>
+    <script src="projects.js"></script>
+    <script src="work.js"></script>
 </body>
 </html>
