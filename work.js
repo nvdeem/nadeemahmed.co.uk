@@ -15,38 +15,30 @@
         return svg;
     }
 
+    function createChip(text, isLock) {
+        const chip = document.createElement('span');
+        chip.className = 'project-card-chip';
+        if (isLock) {
+            chip.appendChild(lockIcon());
+        }
+        const label = document.createElement('span');
+        label.textContent = text;
+        chip.appendChild(label);
+        return chip;
+    }
+
     function renderCard(project) {
         const card = document.createElement('button');
         card.type = 'button';
         card.className = 'project-card';
         card.setAttribute('data-cursor-invert', '');
 
-        const hero = document.createElement('div');
-        hero.className = 'project-card-hero';
-        card.appendChild(hero);
-
         const body = document.createElement('div');
         body.className = 'project-card-body';
 
-        const top = document.createElement('div');
-        top.className = 'project-card-top';
-
-        const tag = document.createElement('span');
-        tag.className = 'project-card-tag';
-        tag.textContent = project.tag;
-        top.appendChild(tag);
-
-        if (project.locked) {
-            const lock = document.createElement('span');
-            lock.className = 'project-card-lock';
-            lock.appendChild(lockIcon());
-            const lockLabel = document.createElement('span');
-            lockLabel.textContent = 'Locked';
-            lock.appendChild(lockLabel);
-            top.appendChild(lock);
-        }
-
-        body.appendChild(top);
+        const hero = document.createElement('div');
+        hero.className = 'project-card-hero';
+        body.appendChild(hero);
 
         const title = document.createElement('h3');
         title.className = 'project-card-title';
@@ -58,10 +50,14 @@
         blurb.textContent = project.blurb;
         body.appendChild(blurb);
 
-        const meta = document.createElement('div');
-        meta.className = 'project-card-meta';
-        meta.textContent = project.year;
-        body.appendChild(meta);
+        const chips = document.createElement('div');
+        chips.className = 'project-card-chips';
+        chips.appendChild(createChip(project.year));
+        chips.appendChild(createChip(project.tag));
+        if (project.locked) {
+            chips.appendChild(createChip('Locked', true));
+        }
+        body.appendChild(chips);
 
         card.appendChild(body);
 
@@ -93,6 +89,10 @@
         title.id = 'overlay-title';
         title.textContent = project.title;
         overlayContent.appendChild(title);
+
+        const hero = document.createElement('div');
+        hero.className = 'overlay-hero';
+        overlayContent.appendChild(hero);
 
         const body = document.createElement('div');
         body.className = 'overlay-body';
@@ -132,7 +132,44 @@
     closeBtn.addEventListener('click', closeOverlay);
     overlayBackdrop.addEventListener('click', closeOverlay);
 
-    if (typeof PROJECTS !== 'undefined') {
-        PROJECTS.forEach(project => grid.appendChild(renderCard(project)));
+    function revealOnScroll(elements) {
+        if (!('IntersectionObserver' in window)) {
+            elements.forEach(el => el.classList.add('in-view'));
+            return;
+        }
+
+        function startObserving() {
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+            elements.forEach(el => observer.observe(el));
+        }
+
+        // Stay hidden even if the section is already in the viewport on load
+        // (e.g. a short hero on a tall screen) — only reveal once the user
+        // actually scrolls, unless they've already scrolled (e.g. #work link).
+        if (window.scrollY > 0) {
+            startObserving();
+        } else {
+            window.addEventListener('scroll', startObserving, { once: true, passive: true });
+        }
     }
+
+    const cards = [];
+    if (typeof PROJECTS !== 'undefined') {
+        PROJECTS.forEach((project, index) => {
+            const card = renderCard(project);
+            card.style.animationDelay = (index * 0.12) + 's';
+            grid.appendChild(card);
+            cards.push(card);
+        });
+    }
+
+    const workHeader = document.querySelector('.work-header');
+    revealOnScroll([workHeader, ...cards].filter(Boolean));
 })();

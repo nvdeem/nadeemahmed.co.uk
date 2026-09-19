@@ -50,24 +50,9 @@ body {
 a, button { cursor: none; }
 
 /* Animation */
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeInCta {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeInCtaItem {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeInUpSoft {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
+@keyframes blurIn {
+    from { opacity: 0; filter: blur(12px); transform: translateY(20px); }
+    to { opacity: 1; filter: blur(0); transform: translateY(0); }
 }
 
 /* Custom Cursor */
@@ -189,7 +174,7 @@ body::after {
     background: linear-gradient(145deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.15) 100%);
     box-shadow: 0 4px 8px rgba(0,0,0,0.3), 0 12px 24px rgba(0,0,0,0.25), 0 24px 48px rgba(0,0,0,0.2);
     overflow: hidden;
-    animation: fadeInUp 0.8s ease-out 0.1s both;
+    animation: blurIn 0.8s ease-out 0.1s both;
 }
 
 .profile-photo {
@@ -222,13 +207,13 @@ body::after {
 .headline {
     font-family: var(--font-serif);
     font-weight: 400;
-    font-size: clamp(2.5rem, 5.5vw, 3.5rem);
+    font-size: clamp(2.5rem, 5.5vw, 3rem);
     line-height: 1.15;
     letter-spacing: -0.01em;
     color: var(--white);
     text-shadow: 0 0 40px rgba(255,255,255,0.15);
     margin-bottom: 1rem;
-    animation: fadeInUp 0.8s ease-out 0.2s both;
+    animation: blurIn 0.8s ease-out 0.2s both;
 }
 
 .subtitle {
@@ -238,7 +223,7 @@ body::after {
     letter-spacing: 0.15em;
     color: var(--text-dim);
     margin-bottom: 1.75rem;
-    animation: fadeInUp 0.8s ease-out 0.3s both;
+    animation: blurIn 0.8s ease-out 0.3s both;
 }
 
 .subtitle .amp { margin: 0 0.4em; }
@@ -249,7 +234,7 @@ body::after {
     color: var(--text-muted);
     max-width: 500px;
     margin-bottom: 1.5rem;
-    animation: fadeInUp 0.8s ease-out 0.4s both;
+    animation: blurIn 0.8s ease-out 0.4s both;
 }
 
 /* Links */
@@ -258,7 +243,7 @@ body::after {
     align-items: center;
     gap: 1.5rem;
     margin-bottom: 2.25rem;
-    animation: fadeInUpSoft 0.8s ease-out 0.5s both;
+    animation: blurIn 0.8s ease-out 0.5s both;
 }
 
 .cta {
@@ -270,7 +255,7 @@ body::after {
     text-decoration: none;
     position: relative;
     transition: color 0.3s var(--ease);
-    animation: fadeInUpSoft 0.8s ease-out 0.5s both;
+    animation: blurIn 0.8s ease-out 0.5s both;
 }
 
 .cta::after {
@@ -298,7 +283,7 @@ body::after {
     font-size: 0.85rem;
     color: var(--text-subtle);
     line-height: 1.6;
-    animation: fadeInUp 0.8s ease-out 0.6s both;
+    animation: blurIn 0.8s ease-out 0.6s both;
 }
 
 .contact a {
@@ -357,12 +342,16 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     margin: 0 auto;
 }
 
-.work-header { margin-bottom: 3rem; }
+.work-header { margin-bottom: 3rem; opacity: 0; }
+
+.work-header.in-view {
+    animation: blurIn 0.8s ease-out both;
+}
 
 .work-title {
     font-family: var(--font-serif);
     font-weight: 400;
-    font-size: clamp(2rem, 4.5vw, 2.75rem);
+    font-size: clamp(2rem, 4.5vw, 2.5rem);
     color: var(--white);
     text-shadow: 0 0 40px rgba(255,255,255,0.15);
     margin-bottom: 0.75rem;
@@ -386,67 +375,66 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     display: block;
     width: 100%;
     text-align: left;
-    background: #0a1014;
+    background: rgba(12,18,22,0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 16px;
     overflow: hidden;
     font-family: inherit;
     color: inherit;
     cursor: none;
+    opacity: 0;
     transition: border-color 0.3s var(--ease), background 0.3s var(--ease), transform 0.3s var(--ease);
 }
 
 .project-card:hover {
     border-color: rgba(255,255,255,0.2);
-    background: #10171c;
+    background: rgba(24,24,24,0.78);
     transform: translateY(-2px);
+}
+
+.project-card.in-view {
+    animation: blurIn 0.8s ease-out both;
 }
 
 /* Placeholder hero image — swap for a real project screenshot per project later.
    Light tone on purpose: real screenshots will mostly be light-UI product shots,
-   so this reads as an image slot rather than empty space against the dark card. */
+   so this reads as an image slot rather than empty space against the dark card.
+   Inset within its padded container (card body / overlay inner), not edge-to-edge. */
 .project-card-hero,
 .overlay-hero {
+    position: relative;
     aspect-ratio: 16 / 9;
     background:
         radial-gradient(120% 140% at 20% 0%, rgba(255,255,255,0.9), transparent 55%),
         linear-gradient(155deg, #e4e6ea 0%, #c7cad2 55%, #b3b7c2 100%);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.overlay-hero {
+    margin-bottom: 2rem;
+}
+
+.project-card-hero::after,
+.overlay-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    left: -100%;
+    background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,0) 25%, rgba(255,255,255,0.5) 45%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.5) 55%, rgba(255,255,255,0) 75%, transparent 100%);
+}
+
+.project-card:hover .project-card-hero::after {
+    left: 150%;
+    transition: left 1.5s ease-in-out;
 }
 
 .project-card-body {
-    padding: 1.5rem 1.75rem 1.75rem;
-}
-
-.project-card-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.75rem;
-}
-
-.project-card-tag {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-}
-
-.project-card-lock {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text-subtle);
-}
-
-.project-card-lock svg {
-    width: 11px;
-    height: 11px;
+    padding: 1.125rem;
 }
 
 .project-card-title {
@@ -463,11 +451,30 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     color: var(--text-muted);
 }
 
-.project-card-meta {
+.project-card-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.project-card-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
     font-family: var(--font-mono);
     font-size: 0.7rem;
-    color: var(--text-subtle);
-    margin-top: 1.25rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    padding: 0.3rem 0.7rem;
+}
+
+.project-card-chip svg {
+    width: 11px;
+    height: 11px;
 }
 
 /* Case study overlay */
@@ -492,18 +499,22 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .overlay-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(2,4,5,0.95);
+    background: rgba(2,4,5,0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     cursor: none;
 }
 
 .overlay-panel {
     position: relative;
     width: 100%;
-    max-width: 640px;
+    max-width: 720px;
     max-height: 82vh;
     overflow-x: hidden;
     overflow-y: auto;
-    background: #0a1014;
+    background: rgba(12,18,22,0.8);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 20px;
     transform: translateY(16px);
@@ -517,7 +528,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 }
 
 .overlay-inner {
-    padding: 2.5rem 2.5rem 4rem;
+    padding: 2rem;
 }
 
 .overlay-tags {
@@ -544,6 +555,10 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     font-size: clamp(1.75rem, 4vw, 2.25rem);
     color: var(--white);
     margin-bottom: 1.5rem;
+}
+
+.overlay-hero {
+    margin-bottom: 2rem;
 }
 
 .overlay-body p {
@@ -588,5 +603,4 @@ body.overlay-open { overflow: hidden; }
 
 @media (max-width: 768px) {
     .work-main { padding: 1.5rem 1.5rem 5rem; }
-    .overlay-inner { padding: 1.75rem 1.75rem 3rem; }
 }
