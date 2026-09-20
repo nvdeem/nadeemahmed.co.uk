@@ -1,15 +1,43 @@
 /* Variables */
 :root {
-    --bg: #050A0D;
+    --bg: #0a0a0a;
     --white: #ffffff;
     --text: #f0f0f0;
-    --text-dim: #a1a1aa;
-    --text-muted: #71717a;
-    --text-subtle: #52525b;
+    --text-dim: #a1a1a1;
+    --text-muted: #717171;
+    --text-subtle: #525252;
     --font-serif: 'Instrument Serif', Georgia, serif;
     --font-sans: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
     --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Radius scale — nested "hugged" insets (e.g. profile photo, hero
+       images) stay bespoke, offset from their container's radius rather
+       than using these directly. */
+    --radius-xs: 8px;
+    --radius-md: 16px;
+    --radius-lg: 20px;
+    --radius-full: 999px;
+
+    /* Supporting-text scale. Headlines (.headline, .work-title,
+       .overlay-title, card/locked titles) stay per-component. */
+    --text-2xs: 0.7rem;
+    --text-xs: 0.75rem;
+    --text-sm: 0.8rem;
+    --text-base-sm: 0.875rem;
+    --text-base: 0.95rem;
+
+    /* Glass borders */
+    --border-default: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.12);
+
+    /* Glass surfaces */
+    --glass-bg: rgba(17,17,17,0.7);
+    --glass-bg-panel: rgba(17,17,17,0.8);
+    --glass-bg-chip: rgba(17,17,17,0.9);
+
+    /* Standard hover-state fade (color/background/border-color/transform) */
+    --transition-hover: 0.3s var(--ease);
 }
 
 /* Reset */
@@ -170,11 +198,11 @@ body::after {
     align-items: center;
     gap: 0.25rem;
     padding: 1rem 0.6rem 0.6rem;
-    background: rgba(12,18,22,0.7);
+    background: var(--glass-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 999px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-full);
     box-shadow: 0 8px 24px rgba(0,0,0,0.35);
     animation: navBlurIn 0.8s ease-out both;
 }
@@ -205,7 +233,7 @@ body::after {
     display: block;
     width: 60%;
     height: 1px;
-    background: rgba(255,255,255,0.08);
+    background: var(--border-default);
     margin: 0 0 0.5rem;
 }
 
@@ -216,10 +244,10 @@ body::after {
     justify-content: center;
     width: 40px;
     height: 40px;
-    border-radius: 999px;
+    border-radius: var(--radius-full);
     color: var(--text-dim);
     text-decoration: none;
-    transition: background 0.3s var(--ease), color 0.3s var(--ease);
+    transition: background var(--transition-hover), color var(--transition-hover);
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -239,12 +267,12 @@ body::after {
     left: calc(100% + 1.25rem);
     top: 50%;
     transform: translateY(-50%) translateX(-4px);
-    background: #0a1014;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 6px;
+    background: var(--glass-bg-chip);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-xs);
     padding: 0.35rem 0.7rem;
     font-family: var(--font-sans);
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
     color: var(--text);
     white-space: nowrap;
     opacity: 0;
@@ -267,7 +295,7 @@ body::after {
     height: 40px;
     background: none;
     border: none;
-    border-radius: 999px;
+    border-radius: var(--radius-full);
     color: var(--text);
     cursor: none;
     -webkit-tap-highlight-color: transparent;
@@ -325,11 +353,11 @@ body::after {
         left: auto;
         align-items: stretch;
         padding: 0.6rem;
-        background: rgba(12,18,22,0.9);
+        background: var(--glass-bg-chip);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 16px;
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-md);
         box-shadow: 0 8px 24px rgba(0,0,0,0.35);
         opacity: 0;
         transform: translateY(-8px);
@@ -394,7 +422,7 @@ body::after {
     width: 110px;
     height: 110px;
     margin-bottom: 2.5rem;
-    border-radius: 16px;
+    border-radius: var(--radius-md);
     padding: 3px;
     background: linear-gradient(145deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.15) 100%);
     box-shadow: 0 4px 8px rgba(0,0,0,0.3), 0 12px 24px rgba(0,0,0,0.25), 0 24px 48px rgba(0,0,0,0.2);
@@ -443,7 +471,7 @@ body::after {
 
 .subtitle {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
     font-weight: 500;
     letter-spacing: 0.15em;
     color: var(--text-dim);
@@ -454,7 +482,7 @@ body::after {
 .subtitle .amp { margin: 0 0.4em; }
 
 .tagline {
-    font-size: 0.95rem;
+    font-size: var(--text-base);
     line-height: 1.8;
     color: var(--text-muted);
     max-width: 500px;
@@ -475,11 +503,11 @@ body::after {
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    font-size: 0.9rem;
+    font-size: var(--text-base-sm);
     color: var(--text-dim);
     text-decoration: none;
     position: relative;
-    transition: color 0.3s var(--ease);
+    transition: color var(--transition-hover);
     animation: blurIn 0.8s ease-out 0.5s both;
 }
 
@@ -491,7 +519,7 @@ body::after {
     width: 0;
     height: 1px;
     background: var(--white);
-    transition: width 0.3s var(--ease);
+    transition: width var(--transition-hover);
 }
 
 .cta:hover { color: var(--white); }
@@ -499,7 +527,7 @@ body::after {
 
 .cta .arrow {
     font-size: 0.85rem;
-    transition: transform 0.3s var(--ease);
+    transition: transform var(--transition-hover);
 }
 
 .cta:hover .arrow { transform: translate(3px, -3px); }
@@ -509,14 +537,14 @@ body::after {
     align-items: center;
     gap: 0.3rem;
     padding: 0.5rem 1rem;
-    border-radius: 999px;
+    border-radius: var(--radius-full);
     background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid var(--border-strong);
     color: var(--text-dim);
-    font-size: 0.85rem;
+    font-size: var(--text-base-sm);
     font-weight: 500;
     text-decoration: none;
-    transition: background 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease);
+    transition: background var(--transition-hover), border-color var(--transition-hover), color var(--transition-hover);
     animation: blurIn 0.8s ease-out 0.5s both;
 }
 
@@ -534,7 +562,7 @@ body::after {
 .cta-primary:hover .arrow { transform: translate(2px, -2px); }
 
 .contact {
-    font-size: 0.85rem;
+    font-size: var(--text-base-sm);
     color: var(--text-subtle);
     line-height: 1.6;
     animation: blurIn 0.8s ease-out 0.6s both;
@@ -544,7 +572,7 @@ body::after {
     color: var(--text-muted);
     text-decoration: none;
     position: relative;
-    transition: color 0.3s var(--ease);
+    transition: color var(--transition-hover);
 }
 
 .contact a::after {
@@ -555,7 +583,7 @@ body::after {
     width: 0;
     height: 1px;
     background: var(--white);
-    transition: width 0.3s var(--ease);
+    transition: width var(--transition-hover);
 }
 
 .contact a:hover { color: var(--white); }
@@ -617,7 +645,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 }
 
 .work-subtitle {
-    font-size: 0.95rem;
+    font-size: var(--text-base);
     line-height: 1.8;
     color: var(--text-muted);
     max-width: 525px;
@@ -634,17 +662,17 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     display: block;
     width: 100%;
     text-align: left;
-    background: rgba(12,18,22,0.7);
+    background: var(--glass-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
     overflow: hidden;
     font-family: inherit;
     color: inherit;
     cursor: none;
     opacity: 0;
-    transition: border-color 0.3s var(--ease), background 0.3s var(--ease), transform 0.3s var(--ease);
+    transition: border-color var(--transition-hover), background var(--transition-hover), transform var(--transition-hover);
 }
 
 .project-card:hover {
@@ -668,7 +696,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     background:
         radial-gradient(120% 140% at 20% 0%, rgba(255,255,255,0.9), transparent 55%),
         linear-gradient(155deg, #e4e6ea 0%, #c7cad2 55%, #b3b7c2 100%);
-    border-radius: 8px;
+    border-radius: var(--radius-xs);
     box-shadow: 0 8px 24px rgba(0,0,0,0.35);
     overflow: hidden;
     margin-bottom: 1rem;
@@ -695,14 +723,14 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .project-card-title {
     font-family: var(--font-sans);
     font-weight: 500;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     line-height: 1.4;
     color: var(--white);
     margin-bottom: 0.5rem;
 }
 
 .project-card-blurb {
-    font-size: 0.875rem;
+    font-size: var(--text-base-sm);
     line-height: 1.6;
     color: var(--text-muted);
 }
@@ -719,12 +747,12 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     align-items: center;
     gap: 0.3rem;
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: var(--text-2xs);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-dim);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-full);
     padding: 0.3rem 0.7rem;
 }
 
@@ -755,7 +783,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .overlay-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(2,4,5,0.7);
+    background: rgba(3,3,3,0.7);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     cursor: none;
@@ -768,11 +796,11 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     max-height: 82vh;
     overflow-x: hidden;
     overflow-y: auto;
-    background: rgba(12,18,22,0.8);
+    background: var(--glass-bg-panel);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
     transform: translateY(16px);
     opacity: 0;
     transition: transform 0.4s var(--ease), opacity 0.4s var(--ease);
@@ -781,6 +809,10 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .overlay.is-open .overlay-panel {
     transform: translateY(0);
     opacity: 1;
+}
+
+.overlay-panel.is-compact {
+    max-width: 420px;
 }
 
 .overlay-inner {
@@ -797,14 +829,14 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 
 .overlay-tag {
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: var(--text-2xs);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-dim);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-full);
     padding: 0.3rem 0.7rem;
-    transition: border-color 0.3s var(--ease), color 0.3s var(--ease), transform 0.3s var(--ease);
+    transition: border-color var(--transition-hover), color var(--transition-hover), transform var(--transition-hover);
 }
 
 .overlay-tag:hover {
@@ -833,13 +865,158 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 }
 
 .overlay-body p {
-    font-size: 0.95rem;
+    font-size: var(--text-base);
     line-height: 1.8;
     color: var(--text-muted);
     margin-bottom: 1.25rem;
 }
 
 .overlay-body p:last-child { margin-bottom: 0; }
+
+.overlay-locked {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+    animation: blurIn 0.5s ease-out both;
+}
+
+.overlay-locked-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border-strong);
+    color: var(--text-dim);
+    margin-bottom: 1.25rem;
+}
+
+.overlay-locked-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.overlay-locked-title {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 1.25rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+}
+
+.overlay-locked-text {
+    font-size: var(--text-base-sm);
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 300px;
+    margin-bottom: 1.75rem;
+}
+
+.overlay-locked-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 280px;
+}
+
+.overlay-locked-input {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius-xs);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: var(--text-base-sm);
+    cursor: auto;
+    transition: border-color var(--transition-hover), background var(--transition-hover);
+}
+
+.overlay-locked-input::placeholder { color: var(--text-subtle); }
+
+.overlay-locked-input:focus {
+    outline: none;
+    border-color: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.06);
+}
+
+.overlay-locked-input.shake {
+    animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shake {
+    10%, 90% { transform: translateX(-1px); }
+    20%, 80% { transform: translateX(2px); }
+    30%, 50%, 70% { transform: translateX(-4px); }
+    40%, 60% { transform: translateX(4px); }
+}
+
+.overlay-locked-submit {
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius-xs);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--text-base-sm);
+    cursor: none;
+    transition: background var(--transition-hover), border-color var(--transition-hover), color var(--transition-hover);
+}
+
+.overlay-locked-submit:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.2);
+    color: var(--white);
+}
+
+.overlay-locked-submit:disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.overlay-locked-error {
+    font-size: var(--text-sm);
+    color: rgba(255,120,120,0.9);
+}
+
+.overlay-locked-contact {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 1.5rem;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    text-decoration: none;
+    position: relative;
+    transition: color var(--transition-hover);
+}
+
+.overlay-locked-contact::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--white);
+    transition: width var(--transition-hover);
+}
+
+.overlay-locked-contact:hover { color: var(--white); }
+.overlay-locked-contact:hover::after { width: 100%; }
+
+.overlay-locked-contact .arrow {
+    font-size: 0.8rem;
+    transition: transform 0.3s var(--ease);
+}
+
+.overlay-locked-contact:hover .arrow { transform: translate(2px, -2px); }
 
 .overlay-close {
     position: fixed;
@@ -850,16 +1027,16 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     align-items: center;
     gap: 0.5rem;
     font-family: var(--font-sans);
-    font-size: 0.85rem;
+    font-size: var(--text-base-sm);
     color: var(--text);
-    background: rgba(10,16,20,0.9);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 999px;
+    background: var(--glass-bg-chip);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-full);
     padding: 0.7rem 1.25rem;
     cursor: none;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s var(--ease), border-color 0.3s var(--ease);
+    transition: opacity var(--transition-hover), border-color var(--transition-hover);
     z-index: 510;
 }
 
