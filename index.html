@@ -24,7 +24,33 @@
     <div class="cursor"></div>
     <div class="cursor-glow"></div>
     <div class="bg"></div>
-    
+
+    <nav class="site-nav">
+        <a href="#" class="site-nav-logo" data-cursor-invert aria-label="Home">
+            <img src="logo.svg" alt="Nadeem Ahmed" width="22" height="9">
+        </a>
+
+        <button type="button" class="site-nav-toggle" data-cursor-invert aria-label="Open menu" aria-expanded="false">
+            <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
+            <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+
+        <div class="site-nav-links">
+            <a href="#work" class="site-nav-link" data-cursor-invert>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg>
+                <span class="site-nav-label">Work</span>
+            </a>
+            <a href="#about" class="site-nav-link" data-cursor-invert>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span class="site-nav-label">About</span>
+            </a>
+            <a href="#contact" class="site-nav-link" data-cursor-invert>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+                <span class="site-nav-label">Contact</span>
+            </a>
+        </div>
+    </nav>
+
     <main class="container">
         <div class="content">
             <div class="profile-photo-wrapper">
@@ -70,6 +96,7 @@
     </div>
 
     <script src="cursor.js"></script>
+    <script src="nav.js"></script>
     <script src="projects.js"></script>
     <script src="work.js"></script>
 </body>
