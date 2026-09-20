@@ -257,7 +257,8 @@ body::after {
 }
 
 .site-nav-link:hover,
-.site-nav-link:focus-visible {
+.site-nav-link:focus-visible,
+.site-nav-link.is-active {
     background: rgba(255,255,255,0.08);
     color: var(--white);
 }
