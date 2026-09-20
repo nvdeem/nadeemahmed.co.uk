@@ -4,9 +4,10 @@
 // stored in the LOCKED_PASSWORD_HASH env var, never a plaintext comparison.
 const PROTECTED_CONTENT = {
     'project-two': {
-        title: 'Project Two',
-        tag: 'UX Research',
-        year: '2023',
+        title: 'Protecting Monzo Users from Crypto Scams',
+        tags: ['Monzo', 'Product Design'],
+        year: '2025',
+        image: 'images/monzo-crypto-allowance-cover.png',
         body: [
             { type: 'paragraph', text: 'This is the real case study body, served only after a correct password — still placeholder text for now. Real content will be adapted from Behance later.' },
             { type: 'paragraph', text: 'It only ever reaches the browser in this response, proving it is genuinely gated rather than just hidden client-side like the public projects.js file.' }

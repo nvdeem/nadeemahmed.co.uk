@@ -38,6 +38,13 @@
 
         const hero = document.createElement('div');
         hero.className = 'project-card-hero';
+        if (project.image) {
+            const img = document.createElement('img');
+            img.src = project.image;
+            img.alt = '';
+            img.loading = 'lazy';
+            hero.appendChild(img);
+        }
         body.appendChild(hero);
 
         const title = document.createElement('h3');
@@ -53,7 +60,7 @@
         const chips = document.createElement('div');
         chips.className = 'project-card-chips';
         chips.appendChild(createChip(project.year));
-        chips.appendChild(createChip(project.tag));
+        (project.tags || []).forEach(tag => chips.appendChild(createChip(tag)));
         if (project.locked) {
             chips.appendChild(createChip('Locked', true));
         }
@@ -80,7 +87,7 @@
     function renderProjectDetail(details) {
         const tagsRow = document.createElement('div');
         tagsRow.className = 'overlay-tags';
-        [details.year, details.tag].forEach(t => {
+        [details.year, ...(details.tags || [])].forEach(t => {
             const pill = document.createElement('span');
             pill.className = 'overlay-tag';
             pill.textContent = t;
@@ -96,6 +103,12 @@
 
         const hero = document.createElement('div');
         hero.className = 'overlay-hero';
+        if (details.image) {
+            const img = document.createElement('img');
+            img.src = details.image;
+            img.alt = '';
+            hero.appendChild(img);
+        }
         overlayContent.appendChild(hero);
 
         const body = document.createElement('div');
@@ -127,18 +140,23 @@
 
         const text = document.createElement('p');
         text.className = 'overlay-locked-text';
-        text.textContent = 'This case study is password protected.';
+        text.textContent = 'Enter the password to view this case study.';
         wrap.appendChild(text);
 
         const form = document.createElement('form');
         form.className = 'overlay-locked-form';
         form.setAttribute('novalidate', '');
 
+        const label = document.createElement('label');
+        label.className = 'overlay-locked-label';
+        label.htmlFor = 'overlay-locked-password';
+        label.textContent = 'Password';
+        form.appendChild(label);
+
         const input = document.createElement('input');
         input.type = 'password';
+        input.id = 'overlay-locked-password';
         input.className = 'overlay-locked-input';
-        input.placeholder = 'Password';
-        input.setAttribute('aria-label', 'Password');
         form.appendChild(input);
 
         const submit = document.createElement('button');
@@ -194,9 +212,9 @@
                 const data = await res.json().catch(() => ({}));
                 showError(data.error === 'Incorrect password'
                     ? 'Incorrect password. Try again.'
-                    : 'Something went wrong. Try again.');
+                    : 'Unable to unlock. Check your connection and try again.');
             } catch {
-                showError('Something went wrong. Try again.');
+                showError('Unable to unlock. Check your connection and try again.');
             } finally {
                 submit.disabled = false;
                 submit.textContent = 'Unlock';
