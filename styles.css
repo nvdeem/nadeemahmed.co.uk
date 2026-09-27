@@ -4,11 +4,14 @@
     --white: #ffffff;
     --text: #f0f0f0;
     --text-dim: #a1a1a1;
-    --text-muted: #717171;
-    --text-subtle: #525252;
+    --text-muted: #7a7a7a;
+    --text-subtle: #7a7a7a;
+    --color-good: #4ade80;
+    --color-bad: #f87171;
     --font-serif: 'Instrument Serif', Georgia, serif;
     --font-sans: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
+    --font-code: 'Google Sans Code', monospace;
     --ease: cubic-bezier(0.16, 1, 0.3, 1);
 
     /* Radius scale — nested "hugged" insets (e.g. profile photo, hero
@@ -19,13 +22,22 @@
     --radius-lg: 20px;
     --radius-full: 999px;
 
-    /* Supporting-text scale. Headlines (.headline, .work-title,
-       .overlay-title, card/locked titles) stay per-component. */
+    /* Supporting-text scale. */
     --text-2xs: 0.7rem;
     --text-xs: 0.75rem;
     --text-sm: 0.8rem;
     --text-base-sm: 0.875rem;
     --text-base: 0.95rem;
+
+    /* Headline scale. The two largest steps are responsive (clamp) since
+       they're the biggest thing on their own viewport and need to shrink
+       on narrow screens; everything below that is a fixed rem step. */
+    --text-lg: 1rem;
+    --text-xl: 1.125rem;
+    --text-2xl: 1.375rem;
+    --text-3xl: 1.625rem;
+    --text-4xl: clamp(1.625rem, 4vw, 2rem);
+    --text-5xl: clamp(2rem, 5vw, 2.5rem);
 
     /* Glass borders */
     --border-default: rgba(255,255,255,0.08);
@@ -52,6 +64,8 @@ html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
 }
 
 /* Text selection */
@@ -199,8 +213,12 @@ body::after {
     gap: 0.25rem;
     padding: 1rem 0.6rem 0.6rem;
     background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    /* Lower than the other glass surfaces on purpose — this is the one
+       backdrop-filter that's fixed on screen for the entire page scroll,
+       so its blur radius is the main driver of Chrome's per-frame
+       compositing cost while scrolling. Kept low for scroll smoothness. */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid var(--border-default);
     border-radius: var(--radius-full);
     box-shadow: 0 8px 24px rgba(0,0,0,0.35);
@@ -306,22 +324,25 @@ body::after {
     position: absolute;
     width: 18px;
     height: 18px;
-    transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+    transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1), scale 0.3s cubic-bezier(0.2, 0, 0, 1), filter 0.3s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .site-nav-toggle .icon-close {
     opacity: 0;
-    transform: rotate(-90deg);
+    scale: 0.25;
+    filter: blur(4px);
 }
 
 .site-nav.is-open .site-nav-toggle .icon-menu {
     opacity: 0;
-    transform: rotate(90deg);
+    scale: 0.25;
+    filter: blur(4px);
 }
 
 .site-nav.is-open .site-nav-toggle .icon-close {
     opacity: 1;
-    transform: rotate(0deg);
+    scale: 1;
+    filter: blur(0px);
 }
 
 @media (max-width: 768px) {
@@ -355,8 +376,8 @@ body::after {
         align-items: stretch;
         padding: 0.6rem;
         background: var(--glass-bg-chip);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         border: 1px solid var(--border-default);
         border-radius: var(--radius-md);
         box-shadow: 0 8px 24px rgba(0,0,0,0.35);
@@ -438,6 +459,8 @@ body::after {
     object-position: center 20%;
     border-radius: 13px;
     display: block;
+    outline: 1px solid oklch(1 0 0 / 0.1);
+    outline-offset: -1px;
 }
 
 .profile-photo-wrapper::after {
@@ -448,11 +471,11 @@ body::after {
     z-index: 10;
     border-radius: 13px;
     transform: translateX(-150%);
+    transition: transform 1.5s ease-in-out;
 }
 
 .profile-photo-wrapper:hover::after {
     transform: translateX(150%);
-    transition: transform 1.5s ease-in-out;
 }
 
 .profile-photo-wrapper.no-image { display: none; }
@@ -461,7 +484,7 @@ body::after {
 .headline {
     font-family: var(--font-serif);
     font-weight: 400;
-    font-size: clamp(2.25rem, 5vw, 2.75rem);
+    font-size: var(--text-5xl);
     line-height: 1.25;
     letter-spacing: -0.01em;
     color: var(--white);
@@ -526,8 +549,19 @@ body::after {
 .cta:hover { color: var(--white); }
 .cta:hover::after { width: calc(100% - 1.2rem); }
 
+/* Shared base for every inline arrow-up-right icon (cta, cta-primary,
+   footer links, locked-contact link) — sized in em so each component's
+   own `font-size` still controls it, exactly like the text glyph it
+   replaced. */
+.arrow {
+    display: inline-flex;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+}
+
 .cta .arrow {
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
     transition: transform var(--transition-hover);
 }
 
@@ -545,7 +579,7 @@ body::after {
     font-size: var(--text-base-sm);
     font-weight: 500;
     text-decoration: none;
-    transition: background var(--transition-hover), border-color var(--transition-hover), color var(--transition-hover);
+    transition: background var(--transition-hover), border-color var(--transition-hover), color var(--transition-hover), scale 150ms var(--ease);
     animation: blurIn 0.8s ease-out 0.5s both;
 }
 
@@ -555,31 +589,55 @@ body::after {
     color: var(--white);
 }
 
+.cta-primary:active { scale: 0.96; }
+
 .cta-primary .arrow {
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     transition: transform 0.3s var(--ease);
 }
 
 .cta-primary:hover .arrow { transform: translate(2px, -2px); }
 
-.contact {
-    font-size: var(--text-base-sm);
-    color: var(--text-subtle);
-    line-height: 1.6;
-    animation: blurIn 0.8s ease-out 0.6s both;
+.site-footer {
+    padding: 4rem 2rem 5rem;
+    opacity: 0;
 }
 
-.contact a {
-    color: var(--text-muted);
+.site-footer.in-view {
+    animation: blurIn 0.8s ease-out both;
+}
+
+.site-footer-content {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-default);
+}
+
+.site-footer-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.site-footer-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: var(--text-base-sm);
+    color: var(--text-dim);
     text-decoration: none;
     position: relative;
     transition: color var(--transition-hover);
 }
 
-.contact a::after {
+.site-footer-link::after {
     content: '';
     position: absolute;
-    bottom: -1px;
+    bottom: -2px;
     left: 0;
     width: 0;
     height: 1px;
@@ -587,17 +645,25 @@ body::after {
     transition: width var(--transition-hover);
 }
 
-.contact a:hover { color: var(--white); }
-.contact a:hover::after { width: 100%; }
+.site-footer-link:hover { color: var(--white); }
+.site-footer-link:hover::after { width: calc(100% - 1.2rem); }
+
+.site-footer-link .arrow {
+    font-size: var(--text-sm);
+    transition: transform var(--transition-hover);
+}
+
+.site-footer-link:hover .arrow { transform: translate(3px, -3px); }
+
+.site-footer-copyright {
+    font-size: var(--text-sm);
+    color: var(--text-subtle);
+}
 
 /* Responsive */
 @media (max-width: 768px) {
     .container { padding: 1.5rem; }
     .profile-photo-wrapper { width: 100px; height: 100px; }
-}
-
-@media (max-width: 480px) {
-    .headline { font-size: 2.25rem; }
 }
 
 /* Accessibility */
@@ -638,7 +704,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .work-title {
     font-family: var(--font-serif);
     font-weight: 400;
-    font-size: clamp(1.85rem, 4vw, 2.25rem);
+    font-size: var(--text-4xl);
     line-height: 1.4;
     color: var(--white);
     text-shadow: 0 0 40px rgba(255,255,255,0.15);
@@ -673,14 +739,18 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     color: inherit;
     cursor: none;
     opacity: 0;
-    transition: border-color var(--transition-hover), background var(--transition-hover), transform var(--transition-hover);
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    transition: border-color var(--transition-hover), background var(--transition-hover), transform var(--transition-hover), box-shadow var(--transition-hover), scale 150ms var(--ease);
 }
 
 .project-card:hover {
     border-color: rgba(255,255,255,0.2);
     background: rgba(24,24,24,0.78);
     transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.35);
 }
+
+.project-card:active { scale: 0.96; }
 
 .project-card.in-view {
     animation: blurIn 0.8s ease-out both;
@@ -709,6 +779,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     height: 100%;
     object-fit: cover;
     display: block;
+    outline: 1px solid oklch(1 0 0 / 0.1);
+    outline-offset: -1px;
 }
 
 .project-card-hero::after,
@@ -718,11 +790,11 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     inset: 0;
     background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,0) 25%, rgba(255,255,255,0.5) 45%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.5) 55%, rgba(255,255,255,0) 75%, transparent 100%);
     transform: translateX(-150%);
+    transition: transform 1.5s ease-in-out;
 }
 
 .project-card:hover .project-card-hero::after {
     transform: translateX(150%);
-    transition: transform 1.5s ease-in-out;
 }
 
 .project-card-body {
@@ -732,16 +804,10 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .project-card-title {
     font-family: var(--font-sans);
     font-weight: 500;
-    font-size: 1.3rem;
+    font-size: var(--text-xl);
     line-height: 1.4;
     color: var(--white);
     margin-bottom: 0.5rem;
-}
-
-.project-card-blurb {
-    font-size: var(--text-base-sm);
-    line-height: 1.6;
-    color: var(--text-muted);
 }
 
 .project-card-chips {
@@ -781,12 +847,13 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     padding: 2rem 2rem 7rem;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.35s var(--ease);
+    transition: opacity 0.2s var(--ease);
 }
 
 .overlay.is-open {
     opacity: 1;
     pointer-events: auto;
+    transition: opacity 0.35s var(--ease);
 }
 
 .overlay-backdrop {
@@ -803,25 +870,58 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     width: 100%;
     max-width: 720px;
     max-height: 82vh;
-    overflow-x: hidden;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    /* Clips to the rounded corners; the actual scrolling happens one level
+       in, on .overlay-scroll. Chromium has a real rendering bug where
+       backdrop-filter and overflow-y:auto on the SAME element can leave
+       scrolled-in text with a stale, dimmed partial paint — keeping the
+       backdrop-filter here and the scrolling on a separate child avoids it
+       entirely. Don't merge these two elements back together. */
+    overflow: hidden;
     background: var(--glass-bg-panel);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid var(--border-default);
     border-radius: var(--radius-lg);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.4);
     transform: translateY(16px);
     opacity: 0;
-    transition: transform 0.4s var(--ease), opacity 0.4s var(--ease);
+    transition: transform 0.2s var(--ease), opacity 0.2s var(--ease);
 }
 
 .overlay.is-open .overlay-panel {
     transform: translateY(0);
     opacity: 1;
+    transition: transform 0.4s var(--ease), opacity 0.4s var(--ease);
 }
 
 .overlay-panel.is-compact {
     max-width: 420px;
+}
+
+.overlay-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.overlay-panel::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 72px;
+    background: linear-gradient(to bottom, transparent, var(--glass-bg-panel) 70%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s var(--ease);
+}
+
+.overlay-panel.has-overflow-below::after {
+    opacity: 1;
 }
 
 .overlay-inner {
@@ -857,7 +957,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .overlay-title {
     font-family: var(--font-sans);
     font-weight: 500;
-    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    font-size: var(--text-4xl);
     line-height: 1.4;
     color: var(--white);
     margin-bottom: 1.5rem;
@@ -873,14 +973,440 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     animation: blurIn 0.5s ease-out 0.24s both;
 }
 
+.overlay-body > * {
+    margin-bottom: 1.25rem;
+}
+
+.overlay-body > *:last-child { margin-bottom: 0; }
+
 .overlay-body p {
     font-size: var(--text-base);
     line-height: 1.8;
     color: var(--text-muted);
-    margin-bottom: 1.25rem;
 }
 
-.overlay-body p:last-child { margin-bottom: 0; }
+/* Meta facts grid: Role / Tools / Timeline / Year, etc. */
+.overlay-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--border-default);
+    border-bottom: 1px solid var(--border-default);
+}
+
+.overlay-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.overlay-meta-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+}
+
+.overlay-meta-value {
+    font-size: var(--text-base-sm);
+    color: var(--text);
+    line-height: 1.5;
+}
+
+/* Numbered section header: divides the case study into Problem/Approach/Outcome etc.
+   No divider as the very first block, or right after a meta grid — that
+   already closes itself with its own bottom border. */
+.overlay-body > .overlay-section:not(:first-child) {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-default);
+}
+
+.overlay-body > .overlay-meta + .overlay-section {
+    padding-top: 0;
+    border-top: none;
+}
+
+.overlay-section-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+}
+
+.overlay-section-number {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-subtle);
+}
+
+.overlay-section-eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+
+.overlay-section-heading {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--text-2xl);
+    color: var(--white);
+}
+
+.overlay-section-quote {
+    font-style: italic;
+    font-size: var(--text-base);
+    color: var(--text-dim);
+    border-left: 2px solid var(--border-strong);
+    padding-left: 1rem;
+    line-height: 1.6;
+    margin-top: 0.75rem;
+}
+
+/* Bullet list with classic circular markers */
+.overlay-list {
+    list-style: disc;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.overlay-list li {
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.overlay-list li::marker {
+    color: var(--text-subtle);
+}
+
+/* Callout / key-insight box */
+.overlay-callout {
+    padding: 1.25rem 1.5rem;
+    background: rgba(255,255,255,0.04);
+    border-left: 2px solid var(--white);
+    border-radius: var(--radius-xs);
+}
+
+.overlay-callout-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+}
+
+.overlay-callout-text {
+    font-size: var(--text-base-sm);
+    line-height: 1.7;
+    color: var(--text);
+    font-weight: 500;
+}
+
+/* Screenshot gallery */
+.overlay-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+}
+
+.overlay-gallery-grid img,
+.overlay-gallery-placeholder {
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    border-radius: var(--radius-xs);
+    display: block;
+}
+
+.overlay-gallery-grid img {
+    object-fit: cover;
+    outline: 1px solid oklch(1 0 0 / 0.1);
+    outline-offset: -1px;
+}
+
+.overlay-gallery-placeholder {
+    background:
+        radial-gradient(120% 140% at 20% 0%, rgba(255,255,255,0.9), transparent 55%),
+        linear-gradient(155deg, #e4e6ea 0%, #c7cad2 55%, #b3b7c2 100%);
+}
+
+.overlay-gallery-caption {
+    margin-top: 0.75rem;
+    font-family: var(--font-code);
+    font-size: var(--text-sm);
+    color: var(--text-subtle);
+    text-align: left;
+}
+
+.overlay-gallery-caption-label {
+    color: var(--text-dim);
+    margin-right: 0.6em;
+}
+
+/* Stat row: big number + small label, several side by side */
+.overlay-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.overlay-stat {
+    flex: 1 1 120px;
+    padding: 1.25rem 1rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-xs);
+}
+
+.overlay-stat-value {
+    display: block;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--text-3xl);
+    color: var(--white);
+    margin-bottom: 0.35rem;
+}
+
+.overlay-stat-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+}
+
+/* Numbered list: circular badges instead of bullets */
+.overlay-numbered-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.overlay-numbered-list li {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.overlay-numbered-badge {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-full);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border-strong);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-dim);
+}
+
+.overlay-numbered-content p {
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.overlay-numbered-sub {
+    margin-top: 0.4rem;
+    font-style: italic;
+    color: var(--text-subtle);
+}
+
+/* Card grid: N-up cards, each with its own heading + list */
+.overlay-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.overlay-card {
+    padding: 1.5rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+}
+
+.overlay-card-heading {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--text-lg);
+    color: var(--white);
+    margin-bottom: 0.85rem;
+}
+
+.overlay-card-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.overlay-card-list li {
+    font-size: var(--text-base-sm);
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+/* Comparison: side-by-side cards with a check/✕ list */
+.overlay-comparison {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.overlay-comparison-card {
+    padding: 1.5rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    text-align: center;
+}
+
+.overlay-comparison-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 1rem;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    display: block;
+}
+
+.overlay-comparison-title {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--text-lg);
+    color: var(--white);
+    margin-bottom: 0.5rem;
+}
+
+.overlay-comparison-description {
+    font-size: var(--text-base-sm);
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.overlay-comparison-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: left;
+}
+
+.overlay-comparison-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: var(--text-base-sm);
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+.overlay-comparison-mark {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    margin-top: 0.15em;
+    color: var(--color-good);
+}
+
+.overlay-comparison-list li.is-bad .overlay-comparison-mark { color: var(--color-bad); }
+
+/* Persona: profile + surrounding trait cards + a pull-quote */
+.overlay-persona {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.overlay-persona-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.35rem;
+}
+
+.overlay-persona-avatar {
+    width: 88px;
+    height: 88px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    outline: 1px solid oklch(1 0 0 / 0.1);
+    outline-offset: -1px;
+    margin-bottom: 0.5rem;
+}
+
+.overlay-persona-name {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--text-2xl);
+    color: var(--white);
+}
+
+.overlay-persona-meta {
+    font-size: var(--text-sm);
+    color: var(--text-subtle);
+}
+
+.overlay-persona-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.overlay-persona-card {
+    padding: 1.25rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+}
+
+.overlay-persona-card h5 {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.75rem;
+}
+
+.overlay-persona-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.overlay-persona-card li {
+    font-size: var(--text-base-sm);
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.overlay-persona-quote {
+    max-width: 420px;
+    font-style: italic;
+    font-size: var(--text-base);
+    color: var(--text-dim);
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-default);
+    border-bottom: 1px solid var(--border-default);
+}
 
 .overlay-locked {
     display: flex;
@@ -912,7 +1438,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .overlay-locked-title {
     font-family: var(--font-sans);
     font-weight: 500;
-    font-size: 1.25rem;
+    font-size: var(--text-xl);
     color: var(--white);
     margin-bottom: 0.5rem;
 }
@@ -981,7 +1507,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     font-weight: 500;
     font-size: var(--text-base-sm);
     cursor: none;
-    transition: background var(--transition-hover), border-color var(--transition-hover), color var(--transition-hover);
+    transition: background var(--transition-hover), border-color var(--transition-hover), color var(--transition-hover), scale 150ms var(--ease);
 }
 
 .overlay-locked-submit:hover {
@@ -989,6 +1515,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     border-color: rgba(255,255,255,0.2);
     color: var(--white);
 }
+
+.overlay-locked-submit:active { scale: 0.96; }
 
 .overlay-locked-submit:disabled {
     opacity: 0.6;
@@ -1024,10 +1552,10 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 }
 
 .overlay-locked-contact:hover { color: var(--white); }
-.overlay-locked-contact:hover::after { width: 100%; }
+.overlay-locked-contact:hover::after { width: calc(100% - 1.1rem); }
 
 .overlay-locked-contact .arrow {
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     transition: transform 0.3s var(--ease);
 }
 
@@ -1051,7 +1579,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     cursor: none;
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--transition-hover), border-color var(--transition-hover);
+    transition: opacity var(--transition-hover), border-color var(--transition-hover), scale 150ms var(--ease);
     z-index: 510;
 }
 
@@ -1061,6 +1589,12 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 }
 
 .overlay-close:hover { border-color: rgba(255,255,255,0.4); }
+.overlay-close:active { scale: 0.96; }
+
+.overlay-close svg {
+    width: 14px;
+    height: 14px;
+}
 
 body.overlay-open { overflow: hidden; }
 

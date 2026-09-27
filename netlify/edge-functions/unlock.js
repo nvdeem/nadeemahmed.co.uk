@@ -7,7 +7,7 @@ const PROTECTED_CONTENT = {
         title: 'Protecting Monzo Users from Crypto Scams',
         tags: ['Monzo', 'Product Design'],
         year: '2025',
-        image: 'images/monzo-crypto-allowance-cover.png',
+        image: 'images/monzo-crypto-allowance-cover.jpg',
         body: [
             { type: 'paragraph', text: 'This is the real case study body, served only after a correct password — still placeholder text for now. Real content will be adapted from Behance later.' },
             { type: 'paragraph', text: 'It only ever reaches the browser in this response, proving it is genuinely gated rather than just hidden client-side like the public projects.js file.' }

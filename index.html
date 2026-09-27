@@ -11,10 +11,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500&family=Google+Sans+Code:wght@500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript>
-        <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500&family=Google+Sans+Code:wght@500&display=swap" rel="stylesheet">
         <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500&display=swap" rel="stylesheet">
     </noscript>
     
@@ -55,13 +55,9 @@
             
             <div class="cta-row">
                 <a href="#work" class="cta-primary" data-cursor-invert>
-                    View work <span class="arrow">↗</span>
+                    View work <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
                 </a>
             </div>
-
-            <p class="contact">
-                Find me on <a href="https://linkedin.com/in/nadeem-a" target="_blank" rel="noopener">LinkedIn</a> or say <a href="mailto:hello@nadeemahmed.co.uk">hello@nadeemahmed.co.uk</a>
-            </p>
         </div>
     </main>
 
@@ -76,12 +72,25 @@
         </div>
     </section>
 
+    <footer class="site-footer">
+        <div class="site-footer-content">
+            <div class="site-footer-links">
+                <a href="https://github.com/nvdeem" target="_blank" rel="noopener" class="site-footer-link" data-cursor-invert>GitHub <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span></a>
+                <a href="https://linkedin.com/in/nadeem-a" target="_blank" rel="noopener" class="site-footer-link" data-cursor-invert>LinkedIn <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span></a>
+                <a href="mailto:hello@nadeemahmed.co.uk" class="site-footer-link" data-cursor-invert>Email <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span></a>
+            </div>
+            <p class="site-footer-copyright">© 2026 Nadeem Ahmed. All rights reserved.</p>
+        </div>
+    </footer>
+
     <div class="overlay" aria-hidden="true">
         <div class="overlay-backdrop"></div>
         <div class="overlay-panel" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
-            <div class="overlay-inner" id="overlay-content"></div>
+            <div class="overlay-scroll">
+                <div class="overlay-inner" id="overlay-content"></div>
+            </div>
         </div>
-        <button type="button" class="overlay-close" data-cursor-invert>✕ Close</button>
+        <button type="button" class="overlay-close" data-cursor-invert><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> Close</button>
     </div>
 
     <script src="cursor.js"></script>

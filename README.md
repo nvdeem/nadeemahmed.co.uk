@@ -24,6 +24,16 @@ python3 -m http.server 8080
 
 Then visit `http://localhost:8080`.
 
+## Tests
+
+Lightweight Playwright smoke tests (page loads, cards render, overlay open/close, locked-content gating, no horizontal scroll, mobile nav):
+
+```bash
+npm install
+npx playwright install chromium
+npm test
+```
+
 ## Deploy
 
 This site is deployed via Netlify from the GitHub repo.
