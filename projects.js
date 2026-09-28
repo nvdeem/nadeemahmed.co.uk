@@ -18,18 +18,14 @@ const PROJECTS = [
         body: [
             { type: 'meta', items: [
                 { label: 'Overview', value: "Quiet Hours is an app designed to help new parents find calm, baby-friendly locations using real time crowd and noise data." },
-                { label: 'Role & Responsibilities', value: 'User Experience Designer — UX Research, Rapid Prototyping, Usability Testing, Illustration, and Product Design.' },
+                { label: 'Role', value: 'User Experience Designer — UX Research, Rapid Prototyping, Usability Testing, Illustration, and Product Design.' },
                 { label: 'Timeline', value: '1 week' },
-                { label: 'Toolkit', value: [
-                    'Figma — Wireframing, Prototyping, and Design',
-                    'Figjam — Brainstorming and Whiteboarding',
-                    'Maze — Usability Testing'
-                ] }
+                { label: 'Tools', value: 'Figma, Figjam, Maze' }
             ] },
 
             { type: 'section', eyebrow: 'Process' },
             { type: 'paragraph', text: 'I followed the Double Diamond framework — researching and defining the problem before exploring and validating solutions.' },
-            { type: 'gallery', images: [''], caption: 'Double Diamond process diagram — research → define → develop → deliver.' },
+            { type: 'gallery', images: ['images/quiet-hours-double-diamond.png'], aspect: '16 / 9', caption: 'Double Diamond process diagram — research → define → develop → deliver.' },
 
             { type: 'section', eyebrow: 'Assumptions' },
             { type: 'numbered-list', items: [
@@ -120,11 +116,11 @@ const PROJECTS = [
             { type: 'callout', label: 'Key insight', text: 'No single tool combines real time crowd and noise data with parent specific context. This is a gap that Quiet Hours fills.' },
 
             { type: 'section', eyebrow: 'Define: Problem Statement' },
-            { type: 'paragraph', text: "New parents aren't avoiding outings because they don't want to go — they're avoiding the anxiety of not knowing what they're walking into." },
+            { type: 'statement', text: "New parents aren't avoiding outings because they don't want to go — they're avoiding the anxiety of not knowing what they're walking into." },
 
             { type: 'section', eyebrow: 'Define: User Persona' },
             { type: 'paragraph', text: 'I began synthesising the research and formed a key persona that defined the user. Meet Maya — a new mum navigating outings with her 6 month old.' },
-            { type: 'gallery', images: [''], caption: 'Maya — user persona.' },
+            { type: 'gallery', images: ['images/quiet-hours-persona.png'], aspect: '16 / 9', caption: 'Maya — user persona.' },
 
             { type: 'section', eyebrow: 'Define: How Might We?' },
             { type: 'paragraph', text: 'With the problem clearly defined, I reframed it into How Might We statements to guide ideation.' },
@@ -141,11 +137,11 @@ const PROJECTS = [
 
             { type: 'section', eyebrow: 'Develop: Sketching & Exploration' },
             { type: 'paragraph', text: 'I began by rapidly exploring ideas using the Crazy 8s framework — sketching multiple concepts to push beyond the obvious solutions. From there, I narrowed down the strongest ideas and mapped out the core user journey.' },
-            { type: 'gallery', images: [''], caption: 'Crazy 8s sketches exploring early concepts.' },
+            { type: 'gallery', images: ['images/quiet-hours-sketches.png'], aspect: '16 / 9', caption: 'Sketches exploring early concepts.' },
 
             { type: 'section', eyebrow: 'Develop: Wireframing' },
             { type: 'paragraph', text: 'With the user flow mapped out, I translated my sketches into low-fidelity wireframes. These screens established the core structure and interactions — from onboarding through to saving favourites. I then built these into a clickable prototype to take into usability testing.' },
-            { type: 'gallery', images: ['', '', '', ''], caption: 'Low-fidelity wireframes — onboarding through to saving favourites.' },
+            { type: 'gallery', images: ['images/quiet-hours-wireframes.png'], aspect: '16 / 9', caption: 'Low-fidelity wireframes — onboarding through to saving favourites.' },
 
             { type: 'section', eyebrow: 'Deliver: Usability Testing' },
             { type: 'paragraph', text: 'I built a working prototype from the wireframes and tested it with parents using Maze. The goal was to validate the core flow and identify usability issues before moving to high fidelity.' },

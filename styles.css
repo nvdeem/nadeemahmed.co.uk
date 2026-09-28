@@ -98,6 +98,51 @@ a, button { cursor: none; }
     to { opacity: 1; filter: blur(0); transform: translateY(0); }
 }
 
+/* Border beam — a travelling gradient ring around a card's edge, adapted
+   from libraries.dev/beam (a React component; reimplemented here in plain
+   CSS since the site stays dependency-free). Rotate/Large/Mono: full
+   border (not just one edge), a single soft comet-like sweep rather than a
+   hard line, grayscale rather than colorful. Uses the same technique the
+   original names: an animated registered custom property driving a
+   conic-gradient, masked down to a ring so it works regardless of the
+   card's own (often translucent) background. */
+@property --beam-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes beam-rotate {
+    to { --beam-angle: 360deg; }
+}
+
+.card-beam {
+    position: relative;
+}
+
+.card-beam::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: conic-gradient(from var(--beam-angle), transparent 0%, transparent 55%, rgba(255,255,255,0.28) 75%, rgba(255,255,255,0.4) 83%, rgba(255,255,255,0.28) 91%, transparent 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    animation: beam-rotate 6s linear infinite;
+    animation-play-state: paused;
+}
+
+.card-beam:hover::before {
+    opacity: 1;
+    animation-play-state: running;
+}
+
 /* Like blurIn, but preserves the -50% vertical-centering transform
    the site-nav relies on (a plain transform in an animation's end
    state overwrites any other transform on the element). */
@@ -549,10 +594,9 @@ body::after {
 .cta:hover { color: var(--white); }
 .cta:hover::after { width: calc(100% - 1.2rem); }
 
-/* Shared base for every inline arrow-up-right icon (cta, cta-primary,
-   footer links, locked-contact link) — sized in em so each component's
-   own `font-size` still controls it, exactly like the text glyph it
-   replaced. */
+/* Shared base for every inline arrow-up-right icon (cta, footer links,
+   locked-contact link) — sized in em so each component's own `font-size`
+   still controls it, exactly like the text glyph it replaced. */
 .arrow {
     display: inline-flex;
     width: 1em;
@@ -567,36 +611,85 @@ body::after {
 
 .cta:hover .arrow { transform: translate(3px, -3px); }
 
-.cta-primary {
+/* CTA pills — shared shape/type (based on libraries.dev/image's "Copy
+   prompt" button: 32px height, 36px radius, 13px/500 label), split into
+   two weights: primary (View work) is solid white, the clear strongest
+   thing on the page; secondary (Get in touch) is the original dark pill
+   from before the primary/secondary split existed. No icons — text only. */
+.cta-primary,
+.cta-secondary {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-full);
-    background: rgba(255,255,255,0.06);
-    border: 1px solid var(--border-strong);
-    color: var(--text-dim);
-    font-size: var(--text-base-sm);
+    justify-content: center;
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 36px;
+    font-family: var(--font-sans);
+    font-size: 13px;
     font-weight: 500;
+    line-height: 1;
     text-decoration: none;
-    transition: background var(--transition-hover), border-color var(--transition-hover), color var(--transition-hover), scale 150ms var(--ease);
+    transition: background 0.14s, scale 150ms var(--ease), transform 0.2s ease-out;
     animation: blurIn 0.8s ease-out 0.5s both;
 }
 
+.cta-primary {
+    background: var(--white);
+    box-shadow: 0px 1px 2px rgba(0,0,0,0.15), 0px 4px 10px rgba(0,0,0,0.12);
+    color: var(--bg);
+}
+
 .cta-primary:hover {
-    background: rgba(255,255,255,0.1);
-    border-color: rgba(255,255,255,0.2);
-    color: var(--white);
+    background: #e8e8e8;
 }
 
-.cta-primary:active { scale: 0.96; }
-
-.cta-primary .arrow {
-    font-size: var(--text-sm);
-    transition: transform 0.3s var(--ease);
+.cta-secondary {
+    background: #1c1c1c;
+    box-shadow: 0px 1px 1px rgba(0,0,0,0.24), inset 0px 0px 0px 1px rgba(255,255,255,0.06), inset 0px 1px 0px rgba(255,255,255,0.08);
+    color: rgb(251,251,251);
 }
 
-.cta-primary:hover .arrow { transform: translate(2px, -2px); }
+.cta-secondary:hover {
+    background: #262626;
+}
+
+.cta-primary:active,
+.cta-secondary:active {
+    scale: 0.96;
+}
+
+.cta-primary-label,
+.cta-secondary-label {
+    display: flex;
+    align-items: center;
+}
+
+/* Icon is zero-width and invisible at rest, so it takes no space and the
+   label alone stays centered — on hover it grows in next to the text
+   rather than being there all along. */
+.cta-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 0;
+    margin-left: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: width 0.25s var(--ease), margin-left 0.25s var(--ease), opacity 0.2s var(--ease);
+}
+
+.cta-primary:hover .cta-icon,
+.cta-secondary:hover .cta-icon {
+    width: 14px;
+    margin-left: 6px;
+    opacity: 1;
+}
+
+.cta-icon svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
 
 .site-footer {
     padding: 4rem 2rem 5rem;
@@ -726,6 +819,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 }
 
 .project-card {
+    position: relative;
     display: block;
     width: 100%;
     text-align: left;
@@ -740,7 +834,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     cursor: none;
     opacity: 0;
     box-shadow: 0 0 0 rgba(0,0,0,0);
-    transition: border-color var(--transition-hover), background var(--transition-hover), transform var(--transition-hover), box-shadow var(--transition-hover), scale 150ms var(--ease);
+    transition: border-color var(--transition-hover), background var(--transition-hover), box-shadow var(--transition-hover), scale 150ms var(--ease), transform 0.15s ease-out;
 }
 
 .project-card:hover {
@@ -751,6 +845,23 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 }
 
 .project-card:active { scale: 0.96; }
+
+/* Cursor-following spotlight, position driven by JS via --spot-x/--spot-y
+   (see addCardTilt in work.js). Very low opacity — a hint of light
+   catching the glass, not a visible occluding layer. */
+.project-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--spot-x, 50%) var(--spot-y, 50%), rgba(255,255,255,0.16), transparent 50%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.project-card:hover::before {
+    opacity: 1;
+}
 
 .project-card.in-view {
     animation: blurIn 0.8s ease-out both;
@@ -905,6 +1016,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     min-height: 0;
     overflow-x: hidden;
     overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 .overlay-panel::after {
@@ -983,6 +1095,29 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     font-size: var(--text-base);
     line-height: 1.8;
     color: var(--text-muted);
+}
+
+/* Pronounced statement — a single key claim, meant to stand out from
+   surrounding body copy rather than blend in. */
+.overlay-body p.overlay-statement {
+    font-size: var(--text-2xl);
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--white);
+    border-left: 2px solid var(--white);
+    padding-left: 1.25rem;
+}
+
+/* Each word starts dim and fills in white as the statement scrolls
+   through view (see updateStatementFill in work.js) — a transition on
+   color so it reads as a smooth fill rather than a per-word snap. */
+.overlay-statement-word {
+    color: var(--text-muted);
+    transition: color 0.4s ease-out;
+}
+
+.overlay-statement-word.is-filled {
+    color: var(--white);
 }
 
 /* Meta facts grid: Role / Tools / Timeline / Year, etc. */
@@ -1087,20 +1222,28 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 
 /* Callout / key-insight box */
 .overlay-callout {
-    padding: 1.25rem 1.5rem;
+    padding: 1.5rem;
     background: rgba(255,255,255,0.04);
     border-left: 2px solid var(--white);
-    border-radius: var(--radius-xs);
+    border-radius: var(--radius-md);
 }
 
 .overlay-callout-label {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
     font-family: var(--font-mono);
     font-size: var(--text-2xs);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-dim);
     margin-bottom: 0.5rem;
+}
+
+.overlay-callout-icon {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
 }
 
 .overlay-callout-text {
@@ -1117,18 +1260,26 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     gap: 0.75rem;
 }
 
-.overlay-gallery-grid img,
+.overlay-gallery-frame,
 .overlay-gallery-placeholder {
     width: 100%;
     aspect-ratio: 9 / 16;
     border-radius: var(--radius-xs);
     display: block;
+    overflow: hidden;
 }
 
-.overlay-gallery-grid img {
-    object-fit: cover;
+.overlay-gallery-frame {
+    position: relative;
     outline: 1px solid oklch(1 0 0 / 0.1);
     outline-offset: -1px;
+}
+
+.overlay-gallery-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .overlay-gallery-placeholder {
@@ -1162,7 +1313,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     padding: 1.25rem 1rem;
     background: rgba(255,255,255,0.04);
     border: 1px solid var(--border-default);
-    border-radius: var(--radius-xs);
+    border-radius: var(--radius-md);
 }
 
 .overlay-stat-value {
@@ -1170,8 +1321,17 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     font-family: var(--font-sans);
     font-weight: 500;
     font-size: var(--text-3xl);
+    font-variant-numeric: tabular-nums;
     color: var(--white);
     margin-bottom: 0.35rem;
+    opacity: 0;
+    transform: translateY(8px) scale(0.94);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.overlay-stat-value.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
 }
 
 .overlay-stat-label {
@@ -1181,6 +1341,58 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--text-subtle);
+}
+
+/* Outcome grid: big number/icon + heading + a sentence of context */
+.overlay-outcome-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.overlay-outcome-card {
+    padding: 1.5rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+}
+
+.overlay-outcome-value {
+    display: block;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--text-3xl);
+    font-variant-numeric: tabular-nums;
+    color: var(--white);
+    margin-bottom: 0.75rem;
+    opacity: 0;
+    transform: translateY(8px) scale(0.94);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.overlay-outcome-value.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.overlay-outcome-icon {
+    width: 1em;
+    height: 1em;
+    color: var(--color-good);
+}
+
+.overlay-outcome-heading {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--text-lg);
+    color: var(--white);
+    margin-bottom: 0.5rem;
+}
+
+.overlay-outcome-text {
+    font-size: var(--text-base-sm);
+    line-height: 1.6;
+    color: var(--text-muted);
 }
 
 /* Numbered list: circular badges instead of bullets */
@@ -1225,10 +1437,19 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 }
 
 /* Card grid: N-up cards, each with its own heading + list */
+/* Fixed 2-up (not auto-fit like the other card grids) — this is meant for
+   an even number of themed cards (e.g. affinity mapping's 4), where a
+   2x2 layout is the point, not an incidental result of container width. */
 .overlay-card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
+}
+
+@media (max-width: 480px) {
+    .overlay-card-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .overlay-card {
@@ -1262,7 +1483,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 /* Comparison: side-by-side cards with a check/✕ list */
 .overlay-comparison {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
 }
 
@@ -1271,13 +1492,13 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     background: rgba(255,255,255,0.04);
     border: 1px solid var(--border-default);
     border-radius: var(--radius-md);
-    text-align: center;
+    text-align: left;
 }
 
 .overlay-comparison-icon {
     width: 40px;
     height: 40px;
-    margin: 0 auto 1rem;
+    margin-bottom: 1rem;
     border-radius: var(--radius-full);
     object-fit: cover;
     display: block;
@@ -1370,7 +1591,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 }
 
 .overlay-persona-card {
-    padding: 1.25rem;
+    padding: 1.5rem;
     background: rgba(255,255,255,0.04);
     border: 1px solid var(--border-default);
     border-radius: var(--radius-md);
@@ -1596,7 +1817,92 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     height: 14px;
 }
 
-body.overlay-open { overflow: hidden; }
+/* Case-study images (hero, gallery) are clickable to expand — the
+   cursor-invert on hover is the only affordance, no other visual change. */
+.overlay-expandable {
+    cursor: none;
+}
+
+/* Image lightbox — click-to-expand. Asymmetric enter/exit (open slower
+   than close) matches the case-study overlay's own convention. */
+.lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s var(--ease);
+}
+
+.lightbox.is-open {
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.35s var(--ease);
+}
+
+.lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(3,3,3,0.9);
+}
+
+.lightbox-image {
+    position: relative;
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    cursor: none;
+    transform: scale(0.95);
+    transition: transform 0.2s var(--ease);
+}
+
+.lightbox.is-open .lightbox-image {
+    transform: scale(1);
+    transition: transform 0.4s var(--ease);
+}
+
+.lightbox-close {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--glass-bg-chip);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-full);
+    color: var(--text);
+    cursor: none;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-hover), border-color var(--transition-hover), scale 150ms var(--ease);
+}
+
+.lightbox.is-open .lightbox-close {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.lightbox-close:hover { border-color: rgba(255,255,255,0.4); }
+.lightbox-close:active { scale: 0.96; }
+
+.lightbox-close svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* On `html`, not `body` — `html`/documentElement is the actual scrolling
+   root (same reasoning as the horizontal-scroll fix), so a rule on body
+   alone let the page behind the overlay keep scrolling. */
+html.overlay-open { overflow: hidden; }
 
 @media (max-width: 768px) {
     .work-main { padding: 1.5rem 1.5rem 5rem; }
