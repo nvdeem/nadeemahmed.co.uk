@@ -1320,17 +1320,36 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
         linear-gradient(155deg, #e4e6ea 0%, #c7cad2 55%, #b3b7c2 100%);
 }
 
-.overlay-gallery-caption {
+.overlay-gallery-caption-wrapper {
     margin-top: 0.75rem;
-    font-family: var(--font-code);
-    font-size: var(--text-sm);
-    color: var(--text-subtle);
-    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
 }
 
-.overlay-gallery-caption-label {
-    color: var(--text-dim);
-    margin-right: 0.6em;
+.overlay-gallery-caption {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    font-family: var(--font-sans);
+    font-size: var(--text-2xs);
+    color: rgba(255,255,255,0.25);
+}
+
+.overlay-gallery-figure {
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+}
+
+.overlay-gallery-chip {
+    display: inline-flex;
+    padding: 0.25rem 0.6rem;
+    background: rgba(255,255,255,0.05);
+    border-radius: var(--radius-full);
+    font-family: var(--font-code);
+    font-size: var(--text-2xs);
+    color: var(--text);
 }
 
 /* Stat row: big number + small label, several side by side */

@@ -340,10 +340,18 @@
             figure.appendChild(grid);
 
             if (block.caption) {
-                const caption = el('figcaption', 'overlay-gallery-caption');
-                caption.appendChild(el('span', 'overlay-gallery-caption-label', 'IMAGE'));
+                const wrapper = el('figcaption', 'overlay-gallery-caption-wrapper');
+
+                const caption = el('span', 'overlay-gallery-caption');
+                if (block.figure) caption.appendChild(el('span', 'overlay-gallery-figure', block.figure));
                 caption.appendChild(document.createTextNode(block.caption));
-                figure.appendChild(caption);
+                wrapper.appendChild(caption);
+
+                const chip = el('span', 'overlay-gallery-chip');
+                chip.appendChild(el('span', null, block.mediaType || 'IMAGE'));
+                wrapper.appendChild(chip);
+
+                figure.appendChild(wrapper);
             }
 
             return figure;
