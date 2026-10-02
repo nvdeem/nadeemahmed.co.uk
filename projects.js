@@ -20,21 +20,25 @@ const PROJECTS = [
                 { label: 'Overview', value: "Quiet Hours is an app designed to help new parents find calm, baby-friendly locations using real time crowd and noise data." },
                 { label: 'Role', value: 'User Experience Designer — UX Research, Rapid Prototyping, Usability Testing, Illustration, and Product Design.' },
                 { label: 'Timeline', value: '1 week' },
-                { label: 'Tools', value: 'Figma, Figjam, Maze' }
+                { label: 'Tools', value: [
+                    { text: 'Figma', logo: 'figma' },
+                    { text: 'Maze', logoImg: 'images/logos/maze.png' },
+                    { text: 'Claude', logo: 'claude' }
+                ] }
             ] },
 
-            { type: 'section', eyebrow: 'Process' },
+            { type: 'section', heading: 'Process' },
             { type: 'paragraph', text: 'I followed the Double Diamond framework — researching and defining the problem before exploring and validating solutions.' },
-            { type: 'gallery', images: ['images/quiet-hours-double-diamond.png'], aspect: '16 / 9', caption: 'Double Diamond process diagram — research → define → develop → deliver.' },
+            { type: 'gallery', images: ['images/quiet-hours-double-diamond.png'], aspect: '16 / 9', caption: 'Double Diamond process diagram.' },
 
-            { type: 'section', eyebrow: 'Assumptions' },
+            { type: 'section', heading: 'Assumptions' },
             { type: 'numbered-list', items: [
                 { text: "New parents hesitate to go out with their children as they can't predict the environment." },
                 { text: 'Real time data about crowd and noise levels builds trust.' },
                 { text: 'Reducing anxiety matters more than saving time.' }
             ] },
 
-            { type: 'section', eyebrow: 'Discover: User Interviews' },
+            { type: 'section', eyebrow: 'Discover', heading: 'User Interviews' },
             { type: 'paragraph', text: 'To understand the real needs of new parents, I conducted qualitative research to explore their behaviours, frustrations, and motivations when planning outings.' },
             { type: 'paragraph', text: 'I interviewed new parents aged 26-34 to understand how they currently plan outings with their children. The goal was to uncover pain points, workarounds, and unmet needs.' },
             { type: 'stat-row', items: [
@@ -45,7 +49,7 @@ const PROJECTS = [
                 { value: '15+', label: 'Insights gathered' }
             ] },
 
-            { type: 'section', eyebrow: 'Discover: Affinity Mapping' },
+            { type: 'section', eyebrow: 'Discover', heading: 'Affinity Mapping' },
             { type: 'paragraph', text: 'With interview data collected, I began grouping insights to identify patterns. Using affinity mapping, I clustered observations into four recurring themes that revealed what truly matters to parents when planning outings.' },
             { type: 'card-grid', cards: [
                 { heading: 'Planning around routines', items: [
@@ -70,7 +74,7 @@ const PROJECTS = [
                 ] }
             ] },
 
-            { type: 'section', eyebrow: 'Discover: Key Findings' },
+            { type: 'section', eyebrow: 'Discover', heading: 'Key Findings' },
             { type: 'paragraph', text: 'Four critical insights emerged from research that shaped the direction of the project.' },
             { type: 'numbered-list', items: [
                 { text: "The child's schedule drives the decision, not the destination." },
@@ -79,7 +83,7 @@ const PROJECTS = [
                 { text: "Existing tools don't provide parent specific context." }
             ] },
 
-            { type: 'section', eyebrow: 'Discover: Competitor Analysis' },
+            { type: 'section', eyebrow: 'Discover', heading: 'Competitor Analysis' },
             { type: 'paragraph', text: "I analysed existing tools that parents might use to plan outings, identifying what works, what doesn't, and where opportunities exist." },
             { type: 'comparison', items: [
                 {
@@ -115,14 +119,14 @@ const PROJECTS = [
             ] },
             { type: 'callout', label: 'Key insight', text: 'No single tool combines real time crowd and noise data with parent specific context. This is a gap that Quiet Hours fills.' },
 
-            { type: 'section', eyebrow: 'Define: Problem Statement' },
+            { type: 'section', eyebrow: 'Define', heading: 'Problem Statement' },
             { type: 'statement', text: "New parents aren't avoiding outings because they don't want to go — they're avoiding the anxiety of not knowing what they're walking into." },
 
-            { type: 'section', eyebrow: 'Define: User Persona' },
+            { type: 'section', eyebrow: 'Define', heading: 'User Persona' },
             { type: 'paragraph', text: 'I began synthesising the research and formed a key persona that defined the user. Meet Maya — a new mum navigating outings with her 6 month old.' },
             { type: 'gallery', images: ['images/quiet-hours-persona.png'], aspect: '16 / 9', caption: 'Maya — user persona.' },
 
-            { type: 'section', eyebrow: 'Define: How Might We?' },
+            { type: 'section', eyebrow: 'Define', heading: 'How Might We?' },
             { type: 'paragraph', text: 'With the problem clearly defined, I reframed it into How Might We statements to guide ideation.' },
             { type: 'numbered-list', items: [
                 { text: 'HMW help parents quickly identify which locations are calm and suitable for their children?' },
@@ -131,19 +135,19 @@ const PROJECTS = [
                 { text: 'HMW reduce the time and effort needed to research locations before an outing?' }
             ] },
 
-            { type: 'section', eyebrow: 'Develop: User Flow' },
+            { type: 'section', eyebrow: 'Develop', heading: 'User Flow' },
             { type: 'paragraph', text: "Before jumping into screens, I mapped out the core user journey to ensure the experience addressed Maya's key needs — from discovering a location to confirming it's right for her." },
-            { type: 'gallery', images: [''], caption: 'Core user flow — discovering a location through to confirming it fits.' },
+            { type: 'gallery', images: ['images/quiet-hours-user-flow.png'], aspect: '1000 / 1489', caption: 'Core user flow.' },
 
-            { type: 'section', eyebrow: 'Develop: Sketching & Exploration' },
+            { type: 'section', eyebrow: 'Develop', heading: 'Sketching & Exploration' },
             { type: 'paragraph', text: 'I began by rapidly exploring ideas using the Crazy 8s framework — sketching multiple concepts to push beyond the obvious solutions. From there, I narrowed down the strongest ideas and mapped out the core user journey.' },
             { type: 'gallery', images: ['images/quiet-hours-sketches.png'], aspect: '16 / 9', caption: 'Sketches exploring early concepts.' },
 
-            { type: 'section', eyebrow: 'Develop: Wireframing' },
+            { type: 'section', eyebrow: 'Develop', heading: 'Wireframing' },
             { type: 'paragraph', text: 'With the user flow mapped out, I translated my sketches into low-fidelity wireframes. These screens established the core structure and interactions — from onboarding through to saving favourites. I then built these into a clickable prototype to take into usability testing.' },
-            { type: 'gallery', images: ['images/quiet-hours-wireframes.png'], aspect: '16 / 9', caption: 'Low-fidelity wireframes — onboarding through to saving favourites.' },
+            { type: 'gallery', images: ['images/quiet-hours-wireframes.png'], aspect: '16 / 9', caption: 'Low-fidelity wireframes.' },
 
-            { type: 'section', eyebrow: 'Deliver: Usability Testing' },
+            { type: 'section', eyebrow: 'Deliver', heading: 'Usability Testing' },
             { type: 'paragraph', text: 'I built a working prototype from the wireframes and tested it with parents using Maze. The goal was to validate the core flow and identify usability issues before moving to high fidelity.' },
             { type: 'stat-row', items: [
                 { value: '5', label: 'Participants' },
@@ -158,7 +162,7 @@ const PROJECTS = [
                 { text: "\"I've visited this location\" confused users — they weren't sure if it was a pre-visit or post-visit action.", sub: 'Fix: Clarified copy to indicate post-visit action.' }
             ] },
 
-            { type: 'section', eyebrow: 'Deliver: Final Designs' },
+            { type: 'section', eyebrow: 'Deliver', heading: 'Final Designs' },
             { type: 'paragraph', text: 'Using insights from usability testing, I refined the wireframes into a high-fidelity prototype, improving touch targets, interaction clarity, and microcopy.' },
             { type: 'paragraph', text: 'Below are the final screens that bring the flow together.' },
             { type: 'gallery', images: ['', '', '', ''], caption: 'Final high-fidelity screens.' }

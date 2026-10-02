@@ -113,6 +113,40 @@
         return svg;
     }
 
+    // Brand marks (tool logos in the meta grid) — unlike ICON_PATHS above,
+    // these keep their own real fill colors rather than inheriting
+    // currentColor, since a brand mark's recognizability depends on its
+    // actual colors (Figma's 4-color logo, Claude's brand orange). No
+    // official FigJam mark exists as a standalone icon anywhere (checked
+    // Simple Icons, Iconify's full aggregated search, devicon) — Figma and
+    // FigJam are combined into a single "Figma & FigJam" entry instead of
+    // guessing one. Maze has no usable vector mark either (Simple Icons'
+    // "Maze" entry turned out to be the wrong logo entirely) — its real
+    // current mark, fetched directly from maze.co, is a raster PNG
+    // (`images/logos/maze.png`), rendered via `logoImg()` below instead of
+    // this SVG path registry.
+    const LOGO_MARKUP = {
+        figma: '<path fill="#0acf83" d="M45.5 129c11.9 0 21.5-9.6 21.5-21.5V86H45.5C33.6 86 24 95.6 24 107.5S33.6 129 45.5 129zm0 0"/><path fill="#a259ff" d="M24 64.5C24 52.6 33.6 43 45.5 43H67v43H45.5C33.6 86 24 76.4 24 64.5zm0 0"/><path fill="#f24e1e" d="M24 21.5C24 9.6 33.6 0 45.5 0H67v43H45.5C33.6 43 24 33.4 24 21.5zm0 0"/><path fill="#ff7262" d="M67 0h21.5C100.4 0 110 9.6 110 21.5S100.4 43 88.5 43H67zm0 0"/><path fill="#1abcfe" d="M110 64.5c0 11.9-9.6 21.5-21.5 21.5S67 76.4 67 64.5 76.6 43 88.5 43 110 52.6 110 64.5zm0 0"/>',
+        claude: '<path fill="#D97757" d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3649-.4614-.1578-1.0079.6557-.7225.8802.0607.2246.0607.8923.6861 1.9064 1.4754 2.4893 1.8336.3642.3032.1457-.1032.0182-.0729-.1639-.2733-1.356-2.4467-1.4472-2.4954-.6435-1.0335-.1699-.619a2.98 2.98 0 0 1-.1032-.729l.7467-1.0132.4128-.1335.9956.1335.4188.3642.6191 1.4147 1.0031 2.2283 1.5546 3.0294.4553.899.2429.8316.0912.2552h.1579v-.1457l.1275-1.7055.2368-2.0947.2307-2.6962.0789-.7589.3763-.9107.7468-.4917.5828.2793.4795.6861-.0668.4432-.2853 1.853-.5586 2.9018-.3642 1.9429h.2125l.2428-.2429.9835-1.3053 1.6517-2.0642.7285-.8194.8498-.9047.5464-.4310h1.0334l.7589 1.129-.3399 1.1656-1.0638 1.3498-.8802 1.1412-1.2626 1.7005-.7893 1.3599.0729.1093.1882-.0182 2.8529-.6071 1.541-.2792 1.8396-.3156.8316.3885.0911.3946-.3277.8073-1.9671.4857-2.306.4614-3.4353.8134-.0425.0303.0486.0607 1.5471.1457.6618.0364h1.6192l3.0151.2246.789.5221.4735.6375-.0789.4857-1.2079.6132-1.6333-.389-3.8114-.9077-1.3073-.3252h-.1821v.1093l1.0881 1.0638 1.9945 1.8032 2.4953 2.3194.1275.5768-.3216.4553-.3399-.0486-2.2041-1.6577-.8499-.7467-1.9247-1.6192h-.1275v.1699l.4432.6497 2.3437 3.5219.1214 1.0789-.17.3521-.6071.2125-.6679-.1214-1.3741-1.9247-1.4147-2.1664-1.1412-1.9429-.1396.0789-.6739 7.2606-.3156.3703-.7285.2793-.6071-.4614-.3216-.7467.3216-1.4753.3885-1.9247.3156-1.5289.2853-1.8998.17-.6314-.0121-.0425-.1396.0182-1.4329 1.9671-2.1785 2.9443-1.7236 1.8457-.4128.1639-.7163-.3703.0668-.6618.4007-.5889 2.3863-3.0333 1.4389-1.882.9289-1.0881-.0061-.1578h-.0547l-6.3457 4.1163-1.1291.1457-.4857-.4552.0607-.7468.2307-.2429 1.9064-1.3113z"/>'
+    };
+    const LOGO_VIEWBOX = { figma: '0 0 128 128', claude: '0 0 24 24' };
+
+    function logo(name, className) {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', LOGO_VIEWBOX[name] || '0 0 24 24');
+        if (className) svg.setAttribute('class', className);
+        svg.innerHTML = LOGO_MARKUP[name];
+        return svg;
+    }
+
+    function logoImg(src, className) {
+        const image = document.createElement('img');
+        image.src = src;
+        image.alt = '';
+        if (className) image.className = className;
+        return image;
+    }
+
     function createChip(text, isLock) {
         const chip = el('span', 'project-card-chip');
         if (isLock) chip.appendChild(icon('lock'));
@@ -224,13 +258,26 @@
             return p;
         },
 
+        // Each value line is either a plain string, or `{ text, logo }` to
+        // show a small brand mark next to it (e.g. the Tools list).
         meta(block) {
             const grid = el('div', 'overlay-meta');
             (block.items || []).forEach(item => {
                 const cell = el('div', 'overlay-meta-item');
                 cell.appendChild(el('span', 'overlay-meta-label', item.label));
                 const values = Array.isArray(item.value) ? item.value : [item.value];
-                values.forEach(v => cell.appendChild(el('span', 'overlay-meta-value', v)));
+                values.forEach(v => {
+                    if (v && typeof v === 'object') {
+                        const line = el('span', 'overlay-meta-value overlay-meta-value--logo');
+                        const chip = el('span', 'overlay-meta-logo-chip');
+                        chip.appendChild(v.logoImg ? logoImg(v.logoImg, 'overlay-meta-logo-img') : logo(v.logo, 'overlay-meta-logo'));
+                        line.appendChild(chip);
+                        line.appendChild(document.createTextNode(v.text));
+                        cell.appendChild(line);
+                    } else {
+                        cell.appendChild(el('span', 'overlay-meta-value', v));
+                    }
+                });
                 grid.appendChild(cell);
             });
             return grid;
@@ -618,8 +665,8 @@
     function updateStatementFill() {
         if (!statementBlocks.length) return;
         const viewportRect = overlayScroll.getBoundingClientRect();
-        const startLine = viewportRect.top + viewportRect.height * 0.65;
-        const endLine = viewportRect.top + viewportRect.height * 0.35;
+        const startLine = viewportRect.top + viewportRect.height * 0.5;
+        const endLine = viewportRect.top + viewportRect.height * 0.2;
 
         statementBlocks.forEach(({ el: statementEl, words }) => {
             const rect = statementEl.getBoundingClientRect();
