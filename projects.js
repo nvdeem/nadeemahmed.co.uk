@@ -18,7 +18,7 @@ const PROJECTS = [
         body: [
             { type: 'meta', items: [
                 { label: 'Overview', value: "Quiet Hours is an app designed to help new parents find calm, baby-friendly locations using real time crowd and noise data." },
-                { label: 'Role', value: 'User Experience Designer — UX Research, Rapid Prototyping, Usability Testing, Illustration, and Product Design.' },
+                { label: 'Role', value: 'User Experience Designer, covering UX Research, Rapid Prototyping, Usability Testing, Illustration, and Product Design.' },
                 { label: 'Timeline', value: '1 week' },
                 { label: 'Tools', value: [
                     { text: 'Figma', logo: 'figma' },
@@ -28,7 +28,7 @@ const PROJECTS = [
             ] },
 
             { type: 'section', heading: 'Process' },
-            { type: 'paragraph', text: 'I followed the Double Diamond framework — researching and defining the problem before exploring and validating solutions.' },
+            { type: 'paragraph', text: 'I followed the Double Diamond framework, researching and defining the problem before exploring and validating solutions.' },
             { type: 'gallery', images: ['images/quiet-hours-double-diamond.png'], aspect: '16 / 9', figure: '1.0', caption: 'Double Diamond process diagram.' },
 
             { type: 'section', heading: 'Assumptions' },
@@ -78,7 +78,7 @@ const PROJECTS = [
             { type: 'paragraph', text: 'Four critical insights emerged from research that shaped the direction of the project.' },
             { type: 'numbered-list', items: [
                 { text: "The child's schedule drives the decision, not the destination." },
-                { text: 'Sensory overload affects the whole family — not just the child.' },
+                { text: 'Sensory overload affects the whole family, not just the child.' },
                 { text: 'Uncertainty is just as stressful as busyness itself.' },
                 { text: "Existing tools don't provide parent specific context." }
             ] },
@@ -120,11 +120,11 @@ const PROJECTS = [
             { type: 'callout', label: 'Key insight', text: 'No single tool combines real time crowd and noise data with parent specific context. This is a gap that Quiet Hours fills.' },
 
             { type: 'section', eyebrow: 'Define', heading: 'Problem Statement' },
-            { type: 'statement', text: "New parents aren't avoiding outings because they don't want to go — they're avoiding the anxiety of not knowing what they're walking into." },
+            { type: 'statement', text: "New parents aren't avoiding outings because they don't want to go. They're avoiding the anxiety of not knowing what they're walking into." },
 
             { type: 'section', eyebrow: 'Define', heading: 'User Persona' },
-            { type: 'paragraph', text: 'I began synthesising the research and formed a key persona that defined the user. Meet Maya — a new mum navigating outings with her 6 month old.' },
-            { type: 'gallery', images: ['images/quiet-hours-persona.png'], aspect: '16 / 9', figure: '2.0', caption: 'Maya — user persona.' },
+            { type: 'paragraph', text: 'I began synthesising the research and formed a key persona that defined the user. Meet Maya, a new mum navigating outings with her 6 month old.' },
+            { type: 'gallery', images: ['images/quiet-hours-persona.png'], aspect: '16 / 9', figure: '2.0', caption: 'Maya, user persona.' },
 
             { type: 'section', eyebrow: 'Define', heading: 'How Might We?' },
             { type: 'paragraph', text: 'With the problem clearly defined, I reframed it into How Might We statements to guide ideation.' },
@@ -136,15 +136,15 @@ const PROJECTS = [
             ] },
 
             { type: 'section', eyebrow: 'Develop', heading: 'User Flow' },
-            { type: 'paragraph', text: "Before jumping into screens, I mapped out the core user journey to ensure the experience addressed Maya's key needs — from discovering a location to confirming it's right for her." },
+            { type: 'paragraph', text: "Before jumping into screens, I mapped out the core user journey to ensure the experience addressed Maya's key needs, from discovering a location to confirming it's right for her." },
             { type: 'gallery', images: ['images/quiet-hours-user-flow.png'], aspect: '1000 / 1489', figure: '3.0', caption: 'Core user flow.' },
 
             { type: 'section', eyebrow: 'Develop', heading: 'Sketching & Exploration' },
-            { type: 'paragraph', text: 'I began by rapidly exploring ideas using the Crazy 8s framework — sketching multiple concepts to push beyond the obvious solutions. From there, I narrowed down the strongest ideas and mapped out the core user journey.' },
+            { type: 'paragraph', text: 'I began by rapidly exploring ideas using the Crazy 8s framework, sketching multiple concepts to push beyond the obvious solutions. From there, I narrowed down the strongest ideas and mapped out the core user journey.' },
             { type: 'gallery', images: ['images/quiet-hours-sketches.png'], aspect: '16 / 9', figure: '4.0', caption: 'Sketches exploring early concepts.' },
 
             { type: 'section', eyebrow: 'Develop', heading: 'Wireframing' },
-            { type: 'paragraph', text: 'With the user flow mapped out, I translated my sketches into low-fidelity wireframes. These screens established the core structure and interactions — from onboarding through to saving favourites. I then built these into a clickable prototype to take into usability testing.' },
+            { type: 'paragraph', text: 'With the user flow mapped out, I translated my sketches into low-fidelity wireframes. These screens established the core structure and interactions, from onboarding through to saving favourites. I then built these into a clickable prototype to take into usability testing.' },
             { type: 'gallery', images: ['images/quiet-hours-wireframes.png'], aspect: '16 / 9', figure: '5.0', caption: 'Low-fidelity wireframes.' },
 
             { type: 'section', eyebrow: 'Deliver', heading: 'Usability Testing' },
@@ -155,17 +155,48 @@ const PROJECTS = [
                 { value: 'Maze', label: 'Testing tool' },
                 { value: '80%', label: 'Completion rate' }
             ] },
-            { type: 'paragraph', text: 'The sessions surfaced three recurring friction points — moments where users hesitated, got confused, or could not complete tasks as expected.' },
-            { type: 'numbered-list', items: [
-                { text: "Users instinctively tried to scroll the home screen, but it wasn't scrollable in the prototype.", sub: 'Fix: Made the screen scrollable.' },
-                { text: "The day selector touch targets were too small — users didn't realise the days were tappable.", sub: 'Fix: Redesigned as a more prominent, swipeable navigation with calendar integration.' },
-                { text: "\"I've visited this location\" confused users — they weren't sure if it was a pre-visit or post-visit action.", sub: 'Fix: Clarified copy to indicate post-visit action.' }
+            { type: 'paragraph', text: 'The sessions surfaced three recurring friction points: moments where users hesitated, got confused, or could not complete tasks as expected.' },
+            { type: 'finding-pairs', items: [
+                {
+                    icon: 'mouse',
+                    problem: "Users instinctively tried to scroll the home screen, but it wasn't scrollable in the prototype.",
+                    problemLead: 'Users instinctively tried to scroll the home screen',
+                    fix: 'Made the home screen scrollable, so swiping down to see more suggestions felt natural.',
+                    fixLead: 'Made the home screen scrollable'
+                },
+                {
+                    icon: 'pointer',
+                    problem: "The day selector touch targets were too small, so users didn't realise the days were tappable.",
+                    problemLead: 'The day selector touch targets were too small',
+                    fix: 'Redesigned as a more prominent, swipeable navigation with calendar integration.',
+                    fixLead: 'Redesigned as a more prominent, swipeable navigation'
+                },
+                {
+                    icon: 'circle-help',
+                    problem: "\"I've visited this location\" confused users, who weren't sure if it was a pre-visit or post-visit action.",
+                    problemLead: "\"I've visited this location\" confused users",
+                    fix: 'Clarified the copy to make clear it confirms a past visit, not a plan to visit.',
+                    fixLead: 'Clarified the copy to make clear it confirms a past visit'
+                }
             ] },
 
             { type: 'section', eyebrow: 'Deliver', heading: 'Final Designs' },
             { type: 'paragraph', text: 'Using insights from usability testing, I refined the wireframes into a high-fidelity prototype, improving touch targets, interaction clarity, and microcopy.' },
             { type: 'paragraph', text: 'Below are the final screens that bring the flow together.' },
-            { type: 'gallery', images: ['', '', '', ''], figure: '6.0', caption: 'Final high-fidelity screens.' }
+            { type: 'gallery', aspect: '1572 / 3408', frameless: true, mediaType: 'IMAGES', figure: '6.0', caption: 'Final high-fidelity screens.', images: [
+                'images/quiet-hours-final-01-onboarding.png',
+                'images/quiet-hours-final-02-onboarding-select1.png',
+                'images/quiet-hours-final-03-onboarding-select2.png',
+                'images/quiet-hours-final-04-home.png',
+                'images/quiet-hours-final-05-location-wed.png',
+                'images/quiet-hours-final-06-location-thu.png',
+                'images/quiet-hours-final-07-location-fri.png',
+                'images/quiet-hours-final-08-calendar.png',
+                'images/quiet-hours-final-09-live-activity.png',
+                'images/quiet-hours-final-10-travelling.png',
+                'images/quiet-hours-final-11-end-state.png',
+                'images/quiet-hours-final-12-favourites.png'
+            ] }
         ]
     },
     {
@@ -176,12 +207,12 @@ const PROJECTS = [
         image: 'images/monzo-crypto-allowance-cover.jpg',
         locked: true,
         body: [
-            { type: 'paragraph', text: 'Placeholder body content. This project will be password protected once real protection is wired up — real content is not included here yet.' }
+            { type: 'paragraph', text: 'Placeholder body content. This project will be password protected once real protection is wired up. Real content is not included here yet.' }
         ]
     },
     {
         id: 'project-three',
-        title: 'Project Three',
+        title: 'Bridging Physical and Digital Security in Banking',
         tags: ['Design Systems'],
         year: '2023',
         locked: false,

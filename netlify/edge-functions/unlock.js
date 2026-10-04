@@ -9,7 +9,7 @@ const PROTECTED_CONTENT = {
         year: '2025',
         image: 'images/monzo-crypto-allowance-cover.jpg',
         body: [
-            { type: 'paragraph', text: 'This is the real case study body, served only after a correct password — still placeholder text for now. Real content will be adapted from Behance later.' },
+            { type: 'paragraph', text: 'This is the real case study body, served only after a correct password. Still placeholder text for now, real content will be adapted from Behance later.' },
             { type: 'paragraph', text: 'It only ever reaches the browser in this response, proving it is genuinely gated rather than just hidden client-side like the public projects.js file.' }
         ]
     }

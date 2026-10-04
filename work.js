@@ -14,6 +14,12 @@
     const lightboxClose = document.querySelector('.lightbox-close');
     let lightboxLastFocused = null;
 
+    const scrollProgress = document.querySelector('.overlay-scroll-progress');
+    const scrollProgressToggle = document.querySelector('.overlay-scroll-progress-toggle');
+    const scrollProgressFill = document.querySelector('.overlay-scroll-progress-fill');
+    const scrollProgressMenu = document.querySelector('.overlay-scroll-progress-menu-list');
+    const SCROLL_PROGRESS_CIRCUMFERENCE = 97.4;
+
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Shared element builders — most of the block renderers below are just
@@ -97,7 +103,10 @@
         x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
         check: '<path d="M20 6 9 17l-5-5"/>',
         lightbulb: '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
-        'trending-up': '<path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/>'
+        'trending-up': '<path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/>',
+        mouse: '<rect width="14" height="20" x="5" y="2" rx="7"/><path d="M12 6v4"/>',
+        pointer: '<path d="M22 14a8 8 0 0 1-8 8"/><path d="M18 11v-1a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v1"/><path d="M10 9.5V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v10"/><path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>',
+        'circle-help': '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>'
     };
 
     function icon(name, className) {
@@ -184,6 +193,12 @@
         overlayContent.innerHTML = '';
         overlayPanel.classList.toggle('is-compact', !!project.locked);
 
+        // Reset here (not just in renderProjectDetail) so the locked-state
+        // path also clears out the previous project's sections — otherwise
+        // the scroll-progress widget stayed visible over the password form.
+        sectionNavItems = [];
+        buildScrollProgressMenu();
+
         if (project.locked) {
             renderLockedState(project);
             return;
@@ -197,10 +212,15 @@
     // scroll-linked word fill) once the fresh content is actually in the DOM.
     let pendingCountUps = [];
     let statementBlocks = [];
+    // Populated by the section renderer below ({ id, label, el } per
+    // section block that has a heading/eyebrow) — feeds the scroll
+    // progress widget's jump-to-section menu and active-section tracking.
+    let sectionNavItems = [];
 
     function renderProjectDetail(details) {
         pendingCountUps = [];
         statementBlocks = [];
+        sectionNavItems = [];
 
         const tagsRow = el('div', 'overlay-tags');
         [details.year, ...(details.tags || [])].forEach(t => {
@@ -225,6 +245,7 @@
 
         updateStatementFill();
         pendingCountUps.forEach(node => countUpObserver.observe(node));
+        buildScrollProgressMenu();
     }
 
     const blockRenderers = {
@@ -289,6 +310,12 @@
         section(block) {
             const wrap = el('div', 'overlay-section');
 
+            const label = block.heading || block.eyebrow;
+            if (label) {
+                wrap.id = 'section-' + sectionNavItems.length;
+                sectionNavItems.push({ id: wrap.id, label, el: wrap });
+            }
+
             const meta = el('div', 'overlay-section-meta');
             if (block.number) meta.appendChild(el('span', 'overlay-section-number', block.number));
             if (block.eyebrow) meta.appendChild(el('span', 'overlay-section-eyebrow', block.eyebrow));
@@ -332,7 +359,7 @@
                     grid.appendChild(placeholder);
                     return;
                 }
-                const frame = el('div', 'overlay-gallery-frame');
+                const frame = el('div', block.frameless ? 'overlay-gallery-frame is-frameless' : 'overlay-gallery-frame');
                 if (block.aspect) frame.style.aspectRatio = block.aspect;
                 frame.appendChild(makeExpandable(img(src, null)));
                 grid.appendChild(frame);
@@ -354,6 +381,18 @@
                 figure.appendChild(wrapper);
             }
 
+            return figure;
+        },
+
+        // Full-bleed showcase images — breaks out of .overlay-inner's own
+        // padding to fill the panel's full width, no rounded frame/crop
+        // (unlike `gallery`, which contains images in a cropped 9:16
+        // card). For finished-design showcase shots, not UI screenshots.
+        'full-bleed'(block) {
+            const figure = el('figure', 'overlay-full-bleed');
+            (block.images || []).forEach(src => {
+                figure.appendChild(makeExpandable(img(src, 'overlay-full-bleed-image')));
+            });
             return figure;
         },
 
@@ -446,6 +485,56 @@
                 list.appendChild(li);
             });
             return list;
+        },
+
+        // Paired problem/fix cards, side by side — each item is one row:
+        // an icon-led problem card on the left (the icon is specific to
+        // that finding) and a fix card on the right (always a check mark,
+        // since every row is a resolved issue by definition). Each column
+        // reads as one joined stack (tight 4px gaps, only the group's outer
+        // corners rounded) rather than separate floating cards — bare icon,
+        // no badge, and the sentence's key clause reads slightly brighter
+        // than the rest when `problemLead`/`fixLead` is given. Stacks to a
+        // single column on narrow viewports, problem immediately above its
+        // own fix since they're adjacent in source order either way.
+        'finding-pairs'(block) {
+            const wrap = el('div', 'overlay-finding-pairs');
+
+            const header = el('div', 'overlay-finding-pairs-header');
+            header.appendChild(el('span', null, 'Problem'));
+            header.appendChild(el('span', null, 'Fix'));
+            wrap.appendChild(header);
+
+            const grid = el('div', 'overlay-finding-pairs-grid');
+            const items = block.items || [];
+
+            function emphasizedText(p, text, lead) {
+                if (lead && text.startsWith(lead)) {
+                    p.appendChild(el('span', 'overlay-finding-lead', lead));
+                    p.appendChild(document.createTextNode(text.slice(lead.length)));
+                } else {
+                    p.textContent = text;
+                }
+            }
+
+            items.forEach(item => {
+                const problemCard = el('div', 'overlay-finding-card');
+                problemCard.appendChild(icon(item.icon, 'overlay-finding-icon'));
+                const problemP = document.createElement('p');
+                emphasizedText(problemP, item.problem, item.problemLead);
+                problemCard.appendChild(problemP);
+                grid.appendChild(problemCard);
+
+                const fixCard = el('div', 'overlay-finding-card overlay-finding-card--fix');
+                fixCard.appendChild(icon('check', 'overlay-finding-icon'));
+                const fixP = document.createElement('p');
+                emphasizedText(fixP, item.fix, item.fixLead);
+                fixCard.appendChild(fixP);
+                grid.appendChild(fixCard);
+            });
+            wrap.appendChild(grid);
+
+            return wrap;
         },
 
         // N-up grid of cards, each with its own heading + bullet list.
@@ -629,9 +718,15 @@
     }
 
     function onKeydown(e) {
-        // The lightbox can be open on top of the case-study overlay —
-        // let its own keydown handler take the first Escape press.
-        if (e.key === 'Escape' && !lightbox.classList.contains('is-open')) closeOverlay();
+        if (e.key !== 'Escape') return;
+        // Lightbox, then the scroll-progress menu, then the overlay itself
+        // — each layer takes just the one Escape press closest to it.
+        if (lightbox.classList.contains('is-open')) return;
+        if (scrollProgress.classList.contains('is-open')) {
+            closeScrollProgressMenu();
+            return;
+        }
+        closeOverlay();
     }
 
     function openLightbox(src) {
@@ -661,6 +756,90 @@
         const hasMore = overlayScroll.scrollHeight - overlayScroll.scrollTop - overlayScroll.clientHeight > 4;
         overlayPanel.classList.toggle('has-overflow-below', hasMore);
     }
+
+    // Scroll progress ring + jump-to-section menu. Built fresh per project
+    // render from whatever `section` blocks had a heading/eyebrow; hidden
+    // entirely (`has-sections` not set) for projects with none, like the
+    // locked-state placeholder.
+    function buildScrollProgressMenu() {
+        scrollProgressMenu.innerHTML = '';
+        scrollProgress.classList.toggle('has-sections', sectionNavItems.length > 0);
+        sectionNavItems.forEach(item => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'overlay-scroll-progress-menu-item';
+            btn.setAttribute('role', 'menuitem');
+            btn.appendChild(el('span', 'overlay-scroll-progress-dot'));
+            btn.appendChild(document.createTextNode(item.label));
+            btn.addEventListener('click', () => {
+                // Not offsetTop — .overlay-body's blurIn animation uses
+                // `filter`, which makes it establish a containing block and
+                // register as the real offsetParent, throwing offsetTop off
+                // by however far that block sits from the scroll container.
+                // getBoundingClientRect deltas aren't affected by any of that.
+                const delta = item.el.getBoundingClientRect().top - overlayScroll.getBoundingClientRect().top;
+                overlayScroll.scrollTo({
+                    top: overlayScroll.scrollTop + delta - 24,
+                    behavior: prefersReducedMotion ? 'auto' : 'smooth'
+                });
+                closeScrollProgressMenu();
+            });
+            scrollProgressMenu.appendChild(btn);
+        });
+    }
+
+    function onDocumentClickForScrollProgress(e) {
+        if (!scrollProgress.contains(e.target)) closeScrollProgressMenu();
+    }
+
+    function openScrollProgressMenu() {
+        scrollProgress.classList.add('is-open');
+        scrollProgressToggle.setAttribute('aria-expanded', 'true');
+        document.addEventListener('click', onDocumentClickForScrollProgress, true);
+    }
+
+    function closeScrollProgressMenu() {
+        scrollProgress.classList.remove('is-open');
+        scrollProgressToggle.setAttribute('aria-expanded', 'false');
+        document.removeEventListener('click', onDocumentClickForScrollProgress, true);
+    }
+
+    scrollProgressToggle.addEventListener('click', () => {
+        if (scrollProgress.classList.contains('is-open')) closeScrollProgressMenu();
+        else openScrollProgressMenu();
+    });
+
+    // Progress itself isn't decorative motion — it's a direct readout of
+    // scroll position, so (like updateScrollFade) it runs regardless of
+    // prefers-reduced-motion. No preview text during the scroll — just
+    // the ring — which morphs into a checkmark once the reader actually
+    // reaches the end (`.is-complete`, animated in CSS).
+    function updateScrollProgress() {
+        const max = overlayScroll.scrollHeight - overlayScroll.clientHeight;
+        const progress = max > 0 ? Math.min(1, Math.max(0, overlayScroll.scrollTop / max)) : 0;
+        scrollProgressFill.style.strokeDashoffset = SCROLL_PROGRESS_CIRCUMFERENCE * (1 - progress);
+        scrollProgressToggle.classList.toggle('is-complete', progress >= 0.995);
+
+        let active = null;
+        const triggerLine = overlayScroll.getBoundingClientRect().top + 80;
+        sectionNavItems.forEach(item => {
+            if (item.el.getBoundingClientRect().top <= triggerLine) active = item;
+        });
+        [...scrollProgressMenu.children].forEach((btn, i) => {
+            btn.classList.toggle('is-active', !!active && sectionNavItems[i] === active);
+        });
+    }
+
+    let scrollProgressRaf = null;
+    function requestScrollProgressUpdate() {
+        if (scrollProgressRaf) return;
+        scrollProgressRaf = requestAnimationFrame(() => {
+            updateScrollProgress();
+            scrollProgressRaf = null;
+        });
+    }
+
+    overlayScroll.addEventListener('scroll', requestScrollProgressUpdate, { passive: true });
 
     // Scroll-linked word fill for `statement` blocks: each word is dim by
     // default and turns white as the statement moves through a reveal
@@ -739,6 +918,7 @@
         document.documentElement.classList.add('overlay-open');
         overlayScroll.scrollTop = 0;
         updateScrollFade();
+        updateScrollProgress();
         closeBtn.focus();
         document.addEventListener('keydown', onKeydown);
     }
@@ -748,6 +928,7 @@
         overlay.setAttribute('aria-hidden', 'true');
         document.documentElement.classList.remove('overlay-open');
         document.removeEventListener('keydown', onKeydown);
+        closeScrollProgressMenu();
         if (lastFocused) lastFocused.focus();
     }
 
@@ -797,4 +978,39 @@
     revealOnScroll([workHeader, ...cards, footer].filter(Boolean));
 
     document.querySelectorAll('.cta-primary, .cta-secondary').forEach(cta => addMagnetic(cta));
+
+    // Copy-email pill: copies to the clipboard instead of opening a mail
+    // client, flips its icon/label to a confirmation, then reverts after a
+    // beat. Falls back to a plain mailto if the Clipboard API is unavailable
+    // (e.g. non-HTTPS contexts) rather than silently doing nothing.
+    const copyEmailPill = document.querySelector('.copy-email-pill');
+    if (copyEmailPill) {
+        const label = copyEmailPill.querySelector('.copy-email-label');
+        const email = copyEmailPill.dataset.email;
+        let revertTimer = null;
+
+        copyEmailPill.addEventListener('click', async () => {
+            if (!navigator.clipboard) {
+                window.location.href = 'mailto:' + email;
+                return;
+            }
+            try {
+                await navigator.clipboard.writeText(email);
+            } catch {
+                window.location.href = 'mailto:' + email;
+                return;
+            }
+
+            clearTimeout(revertTimer);
+            copyEmailPill.classList.add('is-copied');
+            label.textContent = 'Copied';
+            copyEmailPill.setAttribute('aria-label', 'Email copied');
+
+            revertTimer = setTimeout(() => {
+                copyEmailPill.classList.remove('is-copied');
+                label.textContent = 'Copy email';
+                copyEmailPill.setAttribute('aria-label', 'Copy email address');
+            }, 1800);
+        });
+    }
 })();

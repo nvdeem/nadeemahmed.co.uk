@@ -753,6 +753,78 @@ body::after {
     color: var(--text-subtle);
 }
 
+/* Copy-email pill: styled identically to .cta-secondary ("Get in touch"),
+   pushed to the right edge of .site-footer-links while GitHub/LinkedIn
+   stay left (margin-left: auto on a flex item). Icon cross-fades
+   vertically on click rather than toggling visibility — copy icon slides
+   out downward, check icon slides in from above into the same slot, then
+   reverses the same way when it resets. Label text swaps instantly, no
+   fade, matching the reference the pill was modeled on. */
+.copy-email-pill {
+    appearance: none;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 36px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    background: #1c1c1c;
+    box-shadow: 0px 1px 1px rgba(0,0,0,0.24), inset 0px 0px 0px 1px rgba(255,255,255,0.06), inset 0px 1px 0px rgba(255,255,255,0.08);
+    color: rgb(251,251,251);
+    margin-left: auto;
+    transition: background 0.14s, scale 150ms var(--ease);
+}
+
+.copy-email-pill:hover {
+    background: #262626;
+}
+
+.copy-email-pill:active { scale: 0.96; }
+
+.copy-email-icon-slot {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.copy-email-icon {
+    position: absolute;
+    inset: 0;
+    width: 14px;
+    height: 14px;
+    transition: transform 0.25s var(--ease), opacity 0.25s var(--ease);
+}
+
+.copy-email-icon--check {
+    transform: translateY(-100%);
+    opacity: 0;
+    color: var(--white);
+}
+
+.copy-email-pill.is-copied .copy-email-icon--copy {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+.copy-email-pill.is-copied .copy-email-icon--check {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .copy-email-icon { transition: opacity 0.15s linear; }
+    .copy-email-icon--copy, .copy-email-icon--check { transform: none; }
+    .copy-email-pill:not(.is-copied) .copy-email-icon--check,
+    .copy-email-pill.is-copied .copy-email-icon--copy { opacity: 0; }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .container { padding: 1.5rem; }
@@ -1213,7 +1285,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     font-size: var(--text-2xs);
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-dim);
+    color: var(--text-subtle);
 }
 
 .overlay-section-heading {
@@ -1268,7 +1340,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     font-size: var(--text-2xs);
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-dim);
+    color: var(--text-subtle);
     margin-bottom: 0.5rem;
 }
 
@@ -1305,6 +1377,14 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     position: relative;
     outline: 1px solid oklch(1 0 0 / 0.1);
     outline-offset: -1px;
+}
+
+/* For images that already carry their own edge (e.g. a phone screenshot
+   with rounded corners and transparent padding baked in) — the frame's
+   own rectangular outline would trace empty transparent corners instead
+   of the actual content, so drop it. */
+.overlay-gallery-frame.is-frameless {
+    outline: none;
 }
 
 .overlay-gallery-frame img {
@@ -1350,6 +1430,26 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     font-family: var(--font-code);
     font-size: var(--text-2xs);
     color: var(--text);
+}
+
+/* Full-bleed showcase images: break out of .overlay-inner's 2rem padding
+   to span the panel's full width, no rounded frame/crop. When this is the
+   last block, .overlay-body's own last-child rule zeroes its bottom
+   margin, so it sits flush with .overlay-panel's bottom edge — the
+   panel's own overflow:hidden + border-radius then clips the image's
+   bottom corners for free, no radius needed on the image itself. */
+.overlay-full-bleed {
+    display: flex;
+    flex-direction: column;
+    margin-left: -2rem;
+    margin-right: -2rem;
+    width: calc(100% + 4rem);
+}
+
+.overlay-full-bleed-image {
+    display: block;
+    width: 100%;
+    height: auto;
 }
 
 /* Stat row: big number + small label, several side by side */
@@ -1485,6 +1585,118 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     margin-top: 0.4rem;
     font-style: italic;
     color: var(--text-subtle);
+}
+
+/* Paired problem/fix cards, side by side per row */
+.overlay-finding-pairs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.overlay-finding-pairs-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    font-family: var(--font-code);
+    font-size: var(--text-2xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+}
+
+/* Row-gap 4px (tight — reads as one joined stack per column) vs
+   column-gap 1rem (clear separation between the Problem/Fix columns). */
+.overlay-finding-pairs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 1rem;
+}
+
+.overlay-finding-card {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    padding: 1.3rem 1.4rem;
+    background: rgba(255,255,255,0.04);
+    border-radius: var(--radius-xs);
+}
+
+/* Rounded top/bottom ends of the joined stack — plain CSS position
+   selectors instead of a JS-computed "is this the first/last pair"
+   class, because which cards are visually first/last changes between
+   the 2-column desktop layout (first *row* = cards 1–2) and the
+   single-column mobile stack (first *card* = card 1 only). A class
+   baked in at render time can't know which layout is active, so on
+   mobile a middle-of-stack card (e.g. the first row's Fix card) was
+   incorrectly keeping its "first" rounding — this reacts to the actual
+   rendered position instead, correctly either way. */
+.overlay-finding-card:first-child,
+.overlay-finding-card:nth-child(2) {
+    border-radius: var(--radius-md) var(--radius-md) var(--radius-xs) var(--radius-xs);
+}
+
+.overlay-finding-card:nth-last-child(-n+2) {
+    border-radius: var(--radius-xs) var(--radius-xs) var(--radius-md) var(--radius-md);
+}
+
+/* Exactly one pair (2 cards): first/last row are the same row, so the
+   rules above would otherwise fight over the same two cards — give
+   full rounding instead of a half-applied split. */
+.overlay-finding-card:first-child:nth-last-child(2),
+.overlay-finding-card:nth-child(2):last-child {
+    border-radius: var(--radius-md);
+}
+
+@media (max-width: 560px) {
+    /* Single-column stack — only the true first/last card in the whole
+       sequence get rounded, not "first/last row". */
+    .overlay-finding-card:nth-child(2) {
+        border-radius: var(--radius-xs);
+    }
+    .overlay-finding-card:nth-last-child(-n+2) {
+        border-radius: var(--radius-xs);
+    }
+    .overlay-finding-card:first-child {
+        border-radius: var(--radius-md) var(--radius-md) var(--radius-xs) var(--radius-xs);
+    }
+    .overlay-finding-card:last-child {
+        border-radius: var(--radius-xs) var(--radius-xs) var(--radius-md) var(--radius-md);
+    }
+}
+
+.overlay-finding-card p {
+    font-size: var(--text-base-sm);
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.overlay-finding-lead {
+    color: var(--text);
+}
+
+.overlay-finding-icon {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-top: 0.2rem;
+    color: var(--text-dim);
+}
+
+.overlay-finding-card--fix .overlay-finding-icon {
+    color: var(--color-good);
+}
+
+@media (max-width: 560px) {
+    /* "Problem"/"Fix" column headers don't map to anything once there
+       are no columns — the cards' own icons (gray vs. green check)
+       already distinguish problem from fix in the single-column stack. */
+    .overlay-finding-pairs-header {
+        display: none;
+    }
+    .overlay-finding-pairs-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Card grid: N-up cards, each with its own heading + list */
@@ -1838,6 +2050,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     left: 50%;
     bottom: 2rem;
     transform: translateX(-50%);
+    z-index: 510;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -1852,7 +2065,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--transition-hover), border-color var(--transition-hover), scale 150ms var(--ease);
-    z-index: 510;
 }
 
 .overlay.is-open .overlay-close {
@@ -1867,6 +2079,192 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     width: 14px;
     height: 14px;
 }
+
+/* Wraps .overlay-panel so the scroll-progress widget can sit at the
+   panel's own bottom-right corner (not the viewport's) without being
+   clipped by the panel's own overflow:hidden — it needs to be a sibling
+   of the panel, not a child, but still track the panel's actual
+   rendered box exactly. No explicit size of its own: it shrink-wraps
+   around .overlay-panel's width/max-width/max-height as a normal block
+   would, so it always matches. */
+.overlay-panel-wrap {
+    position: relative;
+}
+
+/* Scroll progress: a ring that fills with case-study scroll position,
+   expanding on click into a menu of sections to jump to. Anchored to
+   the project panel's own bottom-right corner, inset from the edge. */
+.overlay-scroll-progress {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-hover);
+}
+
+.overlay.is-open .overlay-scroll-progress.has-sections {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.overlay-scroll-progress-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-sans);
+    font-size: var(--text-base-sm);
+    color: var(--text);
+    background: var(--glass-bg-chip);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-full);
+    padding: 0.55rem;
+    cursor: none;
+    box-shadow: 0px 1px 2px rgba(0,0,0,0.15), 0px 4px 10px rgba(0,0,0,0.12);
+    transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease), scale 0.2s var(--ease);
+}
+
+.overlay-scroll-progress-toggle:hover {
+    border-color: rgba(255,255,255,0.4);
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.18), 0px 6px 16px rgba(0,0,0,0.16);
+}
+.overlay-scroll-progress-toggle:active { scale: 0.96; }
+
+.overlay-scroll-progress-ring {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    transform: rotate(-90deg);
+    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+}
+
+.overlay-scroll-progress-track {
+    fill: none;
+    stroke: rgba(255,255,255,0.15);
+    stroke-width: 2;
+}
+
+.overlay-scroll-progress-fill {
+    fill: none;
+    stroke: var(--white);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 97.4;
+    stroke-dashoffset: 97.4;
+    transition: stroke-dashoffset 100ms linear;
+}
+
+/* Checkmark sits in the same spot as the ring, hidden/scaled-down until
+   the reader reaches the end — the two crossfade (ring shrinks out,
+   check pops in) rather than the pill growing a text label. */
+.overlay-scroll-progress-check {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 14px;
+    height: 14px;
+    color: var(--color-good);
+    opacity: 0;
+    transform: scale(0.4);
+    transition: opacity 0.3s var(--ease), transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.overlay-scroll-progress-toggle.is-complete .overlay-scroll-progress-ring {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.6);
+}
+
+.overlay-scroll-progress-toggle.is-complete .overlay-scroll-progress-check {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Menu: grows upward out of the pill, scale+opacity morph, transform
+   anchored to the bottom-right corner where the toggle sits. */
+/* Split decorative surface from the scroll container, same reasoning as
+   .overlay-panel/.overlay-scroll: backdrop-filter and overflow-y:auto on
+   the SAME element is a real Chromium bug (stale, partially-dimmed paint
+   on scrolled-in content) — this menu scrolls once a project has enough
+   sections (Quiet Hours' 14 already does), so it's a live risk here too. */
+.overlay-scroll-progress-menu {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.6rem);
+    min-width: 220px;
+    max-height: min(60vh, 420px);
+    background: var(--glass-bg-panel);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+    transform-origin: bottom right;
+    transform: scale(0.9);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s var(--ease), transform 0.2s var(--ease), visibility 0.2s;
+}
+
+.overlay-scroll-progress-menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: min(60vh, 420px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0.4rem;
+}
+
+.overlay-scroll-progress.is-open .overlay-scroll-progress-menu {
+    transform: scale(1);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.overlay-scroll-progress-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    width: 100%;
+    text-align: left;
+    font-family: var(--font-sans);
+    font-size: var(--text-base-sm);
+    color: var(--text-muted);
+    padding: 0.55rem 0.75rem;
+    border-radius: var(--radius-xs);
+    cursor: none;
+    /* Reset native <button> chrome — without this, the resting state
+       falls back to the browser's own light gray/bordered button style,
+       only overridden once :hover/.is-active's own background kicks in. */
+    appearance: none;
+    background: none;
+    border: none;
+    transition: background var(--transition-hover), color var(--transition-hover);
+}
+
+.overlay-scroll-progress-menu-item:hover,
+.overlay-scroll-progress-menu-item.is-active {
+    background: rgba(255,255,255,0.06);
+    color: var(--white);
+}
+
+.overlay-scroll-progress-dot {
+    flex-shrink: 0;
+    width: 5px;
+    height: 5px;
+    border-radius: var(--radius-full);
+    background: var(--text-subtle);
+    transition: background var(--transition-hover), transform var(--transition-hover);
+}
+
+.overlay-scroll-progress-menu-item.is-active .overlay-scroll-progress-dot {
+    background: var(--white);
+    transform: scale(1.4);
+}
+
 
 /* Case-study images (hero, gallery) are clickable to expand — the
    cursor-invert on hover is the only affordance, no other visual change. */
