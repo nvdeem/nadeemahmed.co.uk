@@ -29,7 +29,7 @@ const PROJECTS = [
 
             { type: 'section', heading: 'Process' },
             { type: 'paragraph', text: 'I followed the Double Diamond framework, researching and defining the problem before exploring and validating solutions.' },
-            { type: 'gallery', images: ['images/quiet-hours-double-diamond.png'], aspect: '16 / 9', figure: '1.0', caption: 'Double Diamond process diagram.' },
+            { type: 'gallery', images: ['images/quiet-hours-double-diamond.jpg'], aspect: '16 / 9', figure: '1.0', caption: 'Double Diamond process diagram.' },
 
             { type: 'section', heading: 'Assumptions' },
             { type: 'numbered-list', items: [
@@ -124,7 +124,7 @@ const PROJECTS = [
 
             { type: 'section', eyebrow: 'Define', heading: 'User Persona' },
             { type: 'paragraph', text: 'I began synthesising the research and formed a key persona that defined the user. Meet Maya, a new mum navigating outings with her 6 month old.' },
-            { type: 'gallery', images: ['images/quiet-hours-persona.png'], aspect: '16 / 9', figure: '2.0', caption: 'Maya, user persona.' },
+            { type: 'gallery', images: ['images/quiet-hours-persona.jpg'], aspect: '16 / 9', figure: '2.0', caption: 'Maya, user persona.' },
 
             { type: 'section', eyebrow: 'Define', heading: 'How Might We?' },
             { type: 'paragraph', text: 'With the problem clearly defined, I reframed it into How Might We statements to guide ideation.' },
@@ -137,15 +137,15 @@ const PROJECTS = [
 
             { type: 'section', eyebrow: 'Develop', heading: 'User Flow' },
             { type: 'paragraph', text: "Before jumping into screens, I mapped out the core user journey to ensure the experience addressed Maya's key needs, from discovering a location to confirming it's right for her." },
-            { type: 'gallery', images: ['images/quiet-hours-user-flow.png'], aspect: '1000 / 1489', figure: '3.0', caption: 'Core user flow.' },
+            { type: 'gallery', images: ['images/quiet-hours-user-flow.jpg'], aspect: '1000 / 1489', figure: '3.0', caption: 'Core user flow.' },
 
             { type: 'section', eyebrow: 'Develop', heading: 'Sketching & Exploration' },
             { type: 'paragraph', text: 'I began by rapidly exploring ideas using the Crazy 8s framework, sketching multiple concepts to push beyond the obvious solutions. From there, I narrowed down the strongest ideas and mapped out the core user journey.' },
-            { type: 'gallery', images: ['images/quiet-hours-sketches.png'], aspect: '16 / 9', figure: '4.0', caption: 'Sketches exploring early concepts.' },
+            { type: 'gallery', images: ['images/quiet-hours-sketches.jpg'], aspect: '16 / 9', figure: '4.0', caption: 'Sketches exploring early concepts.' },
 
             { type: 'section', eyebrow: 'Develop', heading: 'Wireframing' },
             { type: 'paragraph', text: 'With the user flow mapped out, I translated my sketches into low-fidelity wireframes. These screens established the core structure and interactions, from onboarding through to saving favourites. I then built these into a clickable prototype to take into usability testing.' },
-            { type: 'gallery', images: ['images/quiet-hours-wireframes.png'], aspect: '16 / 9', figure: '5.0', caption: 'Low-fidelity wireframes.' },
+            { type: 'gallery', images: ['images/quiet-hours-wireframes.jpg'], aspect: '16 / 9', figure: '5.0', caption: 'Low-fidelity wireframes.' },
 
             { type: 'section', eyebrow: 'Deliver', heading: 'Usability Testing' },
             { type: 'paragraph', text: 'I built a working prototype from the wireframes and tested it with parents using Maze. The goal was to validate the core flow and identify usability issues before moving to high fidelity.' },

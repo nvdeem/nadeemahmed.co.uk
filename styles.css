@@ -548,8 +548,6 @@ body::after {
     animation: blurIn 0.8s ease-out 0.3s both;
 }
 
-.subtitle .amp { margin: 0 0.4em; }
-
 .tagline {
     font-size: var(--text-base);
     line-height: 1.8;
@@ -1432,25 +1430,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     color: var(--text);
 }
 
-/* Full-bleed showcase images: break out of .overlay-inner's 2rem padding
-   to span the panel's full width, no rounded frame/crop. When this is the
-   last block, .overlay-body's own last-child rule zeroes its bottom
-   margin, so it sits flush with .overlay-panel's bottom edge — the
-   panel's own overflow:hidden + border-radius then clips the image's
-   bottom corners for free, no radius needed on the image itself. */
-.overlay-full-bleed {
-    display: flex;
-    flex-direction: column;
-    margin-left: -2rem;
-    margin-right: -2rem;
-    width: calc(100% + 4rem);
-}
-
-.overlay-full-bleed-image {
-    display: block;
-    width: 100%;
-    height: auto;
-}
 
 /* Next-project link, end of the case study — a real card (same glass-bg/
    backdrop-filter/border/shadow chrome as .project-card in the Work grid,
@@ -1614,58 +1593,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--text-subtle);
-}
-
-/* Outcome grid: big number/icon + heading + a sentence of context */
-.overlay-outcome-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-}
-
-.overlay-outcome-card {
-    padding: 1.5rem;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-md);
-}
-
-.overlay-outcome-value {
-    display: block;
-    font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: var(--text-3xl);
-    font-variant-numeric: tabular-nums;
-    color: var(--white);
-    margin-bottom: 0.75rem;
-    opacity: 0;
-    transform: translateY(8px) scale(0.94);
-    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.overlay-outcome-value.is-visible {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-}
-
-.overlay-outcome-icon {
-    width: 1em;
-    height: 1em;
-    color: var(--color-good);
-}
-
-.overlay-outcome-heading {
-    font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: var(--text-lg);
-    color: var(--white);
-    margin-bottom: 0.5rem;
-}
-
-.overlay-outcome-text {
-    font-size: var(--text-base-sm);
-    line-height: 1.6;
-    color: var(--text-muted);
 }
 
 /* Numbered list: circular badges instead of bullets */
@@ -1929,90 +1856,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 }
 
 .overlay-comparison-list li.is-bad .overlay-comparison-mark { color: var(--color-bad); }
-
-/* Persona: profile + surrounding trait cards + a pull-quote */
-.overlay-persona {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-.overlay-persona-profile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 0.35rem;
-}
-
-.overlay-persona-avatar {
-    width: 88px;
-    height: 88px;
-    border-radius: var(--radius-full);
-    object-fit: cover;
-    outline: 1px solid oklch(1 0 0 / 0.1);
-    outline-offset: -1px;
-    margin-bottom: 0.5rem;
-}
-
-.overlay-persona-name {
-    font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: var(--text-2xl);
-    color: var(--white);
-}
-
-.overlay-persona-meta {
-    font-size: var(--text-sm);
-    color: var(--text-subtle);
-}
-
-.overlay-persona-grid {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-}
-
-.overlay-persona-card {
-    padding: 1.5rem;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-md);
-}
-
-.overlay-persona-card h5 {
-    font-family: var(--font-code);
-    font-size: var(--text-2xs);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 0.75rem;
-}
-
-.overlay-persona-card ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.overlay-persona-card li {
-    font-size: var(--text-base-sm);
-    color: var(--text-muted);
-    line-height: 1.5;
-}
-
-.overlay-persona-quote {
-    max-width: 420px;
-    font-style: italic;
-    font-size: var(--text-base);
-    color: var(--text-dim);
-    padding: 1rem 1.5rem;
-    border-top: 1px solid var(--border-default);
-    border-bottom: 1px solid var(--border-default);
-}
 
 .overlay-locked {
     display: flex;

@@ -103,7 +103,6 @@
         x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
         check: '<path d="M20 6 9 17l-5-5"/>',
         lightbulb: '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
-        'trending-up': '<path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/>',
         mouse: '<rect width="14" height="20" x="5" y="2" rx="7"/><path d="M12 6v4"/>',
         pointer: '<path d="M22 14a8 8 0 0 1-8 8"/><path d="M18 11v-1a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v1"/><path d="M10 9.5V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v10"/><path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>',
         'circle-help': '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
@@ -437,18 +436,6 @@
             return figure;
         },
 
-        // Full-bleed showcase images — breaks out of .overlay-inner's own
-        // padding to fill the panel's full width, no rounded frame/crop
-        // (unlike `gallery`, which contains images in a cropped 9:16
-        // card). For finished-design showcase shots, not UI screenshots.
-        'full-bleed'(block) {
-            const figure = el('figure', 'overlay-full-bleed');
-            (block.images || []).forEach(src => {
-                figure.appendChild(makeExpandable(img(src, 'overlay-full-bleed-image')));
-            });
-            return figure;
-        },
-
         // Big number + small label, several side by side. Purely numeric
         // values (with an optional +/% suffix) count up from 0 once
         // scrolled into view; anything else (ranges, words) just renders
@@ -484,42 +471,6 @@
                 row.appendChild(cell);
             });
             return row;
-        },
-
-        // Outcome cards: a big number (or a trending-up icon when there's
-        // no clean metric) plus a short heading and a sentence of context —
-        // for closing a case study on its impact, not just its process.
-        // Numeric values count up the same way `stat-row` does.
-        'outcome-grid'(block) {
-            const grid = el('div', 'overlay-outcome-grid');
-            (block.items || []).forEach(item => {
-                const card = el('div', 'overlay-outcome-card');
-                const value = el('span', 'overlay-outcome-value');
-                const match = item.value ? /^(\d+)(\+|%)?$/.exec(String(item.value).trim()) : null;
-
-                if (!item.value) {
-                    value.appendChild(icon('trending-up', 'overlay-outcome-icon'));
-                    if (prefersReducedMotion) value.classList.add('is-visible');
-                    else pendingCountUps.push(value);
-                } else if (prefersReducedMotion) {
-                    value.textContent = item.value;
-                    value.classList.add('is-visible');
-                } else if (match) {
-                    value.textContent = '0' + (match[2] || '');
-                    value.dataset.countTo = match[1];
-                    value.dataset.countSuffix = match[2] || '';
-                    pendingCountUps.push(value);
-                } else {
-                    value.textContent = item.value;
-                    pendingCountUps.push(value);
-                }
-
-                card.appendChild(value);
-                card.appendChild(el('h4', 'overlay-outcome-heading', item.heading));
-                if (item.text) card.appendChild(el('p', 'overlay-outcome-text', item.text));
-                grid.appendChild(card);
-            });
-            return grid;
         },
 
         // Circular numbered badges instead of bullets. Each item can carry
@@ -631,35 +582,6 @@
                 grid.appendChild(card);
             });
             return grid;
-        },
-
-        // Bespoke persona layout: optional avatar, name/meta, a grid of
-        // trait cards (Goals/Behaviours/Pain Points/Needs), and a quote.
-        persona(block) {
-            const wrap = el('div', 'overlay-persona');
-
-            const profile = el('div', 'overlay-persona-profile');
-            if (block.avatar) profile.appendChild(img(block.avatar, 'overlay-persona-avatar'));
-            profile.appendChild(el('h4', 'overlay-persona-name', block.name));
-            (block.meta || []).forEach(line => profile.appendChild(el('p', 'overlay-persona-meta', line)));
-            wrap.appendChild(profile);
-
-            const grid = el('div', 'overlay-persona-grid');
-            (block.cards || []).forEach(card => {
-                const cell = el('div', 'overlay-persona-card');
-                cell.appendChild(el('h5', null, card.label));
-
-                const list = document.createElement('ul');
-                (card.items || []).forEach(text => list.appendChild(el('li', null, text)));
-                cell.appendChild(list);
-
-                grid.appendChild(cell);
-            });
-            wrap.appendChild(grid);
-
-            if (block.quote) wrap.appendChild(el('blockquote', 'overlay-persona-quote', block.quote));
-
-            return wrap;
         }
     };
 
