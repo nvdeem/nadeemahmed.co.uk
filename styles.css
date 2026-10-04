@@ -1452,6 +1452,128 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     height: auto;
 }
 
+/* Next-project link, end of the case study — a real card (same glass-bg/
+   backdrop-filter/border/shadow chrome as .project-card in the Work grid,
+   just a horizontal thumbnail+title layout instead of stacked), not a
+   thin link row. "Next project" is its own kicker inside the card, above
+   the title. Sits as a sibling of .overlay-body (appended separately in
+   work.js), wrapped in .overlay-next-project-wrap below. */
+/* Owns the top divider separating the card from the case study content
+   above it, plus the spacing and scroll-reveal state — kept off the card
+   itself since that already has its own full border, which would collide
+   with a border-top divider on the same box. */
+.overlay-next-project-wrap {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-default);
+    opacity: 0;
+}
+
+/* Reveals on scroll (see revealOnScroll in work.js) rather than animating
+   in once at overlay-open — by the time a reader scrolls the length of
+   the case study to reach it, a render-time animation has long since
+   finished, so it would just sit there fully formed and feel like it
+   appeared out of nowhere. */
+.overlay-next-project-wrap.in-view {
+    animation: blurIn 0.6s ease-out both;
+}
+
+.overlay-next-project {
+    appearance: none;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.6rem 0.9rem 0.6rem 0.6rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    text-align: left;
+    font-family: inherit;
+    color: inherit;
+    cursor: none;
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    transition: border-color var(--transition-hover), background var(--transition-hover), box-shadow var(--transition-hover), transform 0.15s ease-out;
+}
+
+.overlay-next-project:hover {
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(24,24,24,0.78);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+}
+
+.overlay-next-project:active { scale: 0.96; }
+
+.overlay-next-project-thumb {
+    position: relative;
+    flex-shrink: 0;
+    width: 96px;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-xs);
+    overflow: hidden;
+    background:
+        radial-gradient(120% 140% at 20% 0%, rgba(255,255,255,0.9), transparent 55%),
+        linear-gradient(155deg, #e4e6ea 0%, #c7cad2 55%, #b3b7c2 100%);
+}
+
+/* These covers are wide, busy multi-screen composites — shrunk into the
+   old 16:9 strip they turned to illegible mush. A square frame cropped to
+   the left edge instead isolates whatever's boldest in each cover (the
+   wordmark/logo half of the Quiet Hours cover, the red balance-card phone
+   on Monzo's), which reads as an actual recognizable preview. */
+.overlay-next-project-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left center;
+    display: block;
+    outline: 1px solid oklch(1 0 0 / 0.1);
+    outline-offset: -1px;
+}
+
+.overlay-next-project-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.overlay-next-project-label {
+    display: block;
+    font-family: var(--font-code);
+    font-size: var(--text-2xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+    margin-bottom: 0.35rem;
+}
+
+.overlay-next-project-title {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--text-lg);
+    line-height: 1.3;
+    color: var(--white);
+}
+
+.overlay-next-project-arrow {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    color: var(--text-dim);
+    transition: transform var(--transition-hover), color var(--transition-hover);
+}
+
+.overlay-next-project:hover .overlay-next-project-arrow {
+    transform: translateX(3px);
+    color: var(--white);
+}
+
+@media (max-width: 480px) {
+    .overlay-next-project-thumb { width: 84px; }
+}
+
 /* Stat row: big number + small label, several side by side */
 .overlay-stats {
     display: flex;
@@ -2104,7 +2226,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     transition: opacity var(--transition-hover);
 }
 
-.overlay.is-open .overlay-scroll-progress.has-sections {
+.overlay.is-open .overlay-scroll-progress.has-sections:not(.is-past-content) {
     opacity: 1;
     pointer-events: auto;
 }

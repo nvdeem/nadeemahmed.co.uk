@@ -106,7 +106,8 @@
         'trending-up': '<path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/>',
         mouse: '<rect width="14" height="20" x="5" y="2" rx="7"/><path d="M12 6v4"/>',
         pointer: '<path d="M22 14a8 8 0 0 1-8 8"/><path d="M18 11v-1a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v1"/><path d="M10 9.5V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v10"/><path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>',
-        'circle-help': '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>'
+        'circle-help': '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+        'arrow-right': '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>'
     };
 
     function icon(name, className) {
@@ -189,6 +190,55 @@
         return card;
     }
 
+    // Cycles to the next project in PROJECTS order, wrapping from the last
+    // back to the first. Returns null for a single-project site (no "next"
+    // to link to) rather than pointing a project at itself.
+    function getNextProject(current) {
+        if (typeof PROJECTS === 'undefined' || PROJECTS.length < 2) return null;
+        const idx = PROJECTS.findIndex(p => p.id === current.id);
+        if (idx === -1) return null;
+        return PROJECTS[(idx + 1) % PROJECTS.length];
+    }
+
+    // End-of-case-study link to whatever's next — reuses openOverlay to
+    // swap the overlay's content in place (resets scroll, re-renders),
+    // same mechanism a work-grid card uses, so a locked next project opens
+    // into its own password gate exactly like it would from the grid.
+    function renderNextProjectCard(project) {
+        // Wrap owns the top divider/spacing/reveal state; the button inside
+        // keeps its own distinct card chrome (background, border, radius) —
+        // kept as two elements so the divider line doesn't collide with the
+        // card's own full border.
+        const wrap = el('div', 'overlay-next-project-wrap');
+
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'overlay-next-project';
+        card.setAttribute('data-cursor-invert', '');
+
+        const thumb = el('div', 'overlay-next-project-thumb');
+        if (project.image) thumb.appendChild(img(project.image, null));
+        card.appendChild(thumb);
+
+        const info = el('div', 'overlay-next-project-info');
+        info.appendChild(el('span', 'overlay-next-project-label', 'Next project'));
+        info.appendChild(el('h3', 'overlay-next-project-title', project.title));
+        card.appendChild(info);
+
+        card.appendChild(icon('arrow-right', 'overlay-next-project-arrow'));
+
+        card.addEventListener('click', () => openOverlay(project, card));
+        wrap.appendChild(card);
+
+        // Fades in once actually scrolled into view, same mechanism as the
+        // Work-grid cards/footer — otherwise it's already fully rendered by
+        // the time a reader scrolls the length of the case study to reach
+        // it, so it just appears abruptly with no transition.
+        revealOnScroll([wrap]);
+
+        return wrap;
+    }
+
     function renderOverlayContent(project) {
         overlayContent.innerHTML = '';
         overlayPanel.classList.toggle('is-compact', !!project.locked);
@@ -242,6 +292,9 @@
             if (node) body.appendChild(node);
         });
         overlayContent.appendChild(body);
+
+        const nextProject = getNextProject(details);
+        if (nextProject) overlayContent.appendChild(renderNextProjectCard(nextProject));
 
         updateStatementFill();
         pendingCountUps.forEach(node => countUpObserver.observe(node));
@@ -828,6 +881,14 @@
         [...scrollProgressMenu.children].forEach((btn, i) => {
             btn.classList.toggle('is-active', !!active && sectionNavItems[i] === active);
         });
+
+        // Hide once the next-project card has scrolled into view — it's a
+        // nav element pointing at a *different* project, not more of this
+        // one's content, and the widget floats pinned to the panel's own
+        // corner, so left alone it would just sit on top of the card.
+        const nextProjectWrap = overlayContent.querySelector('.overlay-next-project-wrap');
+        const coversNextProject = !!nextProjectWrap && nextProjectWrap.getBoundingClientRect().top < overlayScroll.getBoundingClientRect().bottom;
+        scrollProgress.classList.toggle('is-past-content', coversNextProject);
     }
 
     let scrollProgressRaf = null;
