@@ -4,8 +4,8 @@
     --white: #ffffff;
     --text: #f0f0f0;
     --text-dim: #a1a1a1;
-    --text-muted: #7a7a7a;
-    --text-subtle: #7a7a7a;
+    --text-muted: #808080;
+    --text-subtle: #808080;
     --color-good: #4ade80;
     --color-bad: #f87171;
     --font-serif: 'Instrument Serif', Georgia, serif;
@@ -583,14 +583,16 @@ body::after {
     position: absolute;
     bottom: -2px;
     left: 0;
-    width: 0;
+    width: calc(100% - 1.2rem);
     height: 1px;
     background: var(--white);
-    transition: width var(--transition-hover);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition-hover);
 }
 
 .cta:hover { color: var(--white); }
-.cta:hover::after { width: calc(100% - 1.2rem); }
+.cta:hover::after { transform: scaleX(1); }
 
 /* Shared base for every inline arrow-up-right icon (cta, footer links,
    locked-contact link) — sized in em so each component's own `font-size`
@@ -621,7 +623,7 @@ body::after {
     justify-content: center;
     height: 32px;
     padding: 0 14px;
-    border-radius: 36px;
+    border-radius: var(--radius-full);
     font-family: var(--font-sans);
     font-size: 13px;
     font-weight: 500;
@@ -730,14 +732,16 @@ body::after {
     position: absolute;
     bottom: -2px;
     left: 0;
-    width: 0;
+    width: calc(100% - 1.2rem);
     height: 1px;
     background: var(--white);
-    transition: width var(--transition-hover);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition-hover);
 }
 
 .site-footer-link:hover { color: var(--white); }
-.site-footer-link:hover::after { width: calc(100% - 1.2rem); }
+.site-footer-link:hover::after { transform: scaleX(1); }
 
 .site-footer-link .arrow {
     font-size: var(--text-sm);
@@ -766,7 +770,7 @@ body::after {
     gap: 0.5rem;
     height: 32px;
     padding: 0 14px;
-    border-radius: 36px;
+    border-radius: var(--radius-full);
     font-family: var(--font-sans);
     font-size: 13px;
     font-weight: 500;
@@ -1994,14 +1998,16 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     position: absolute;
     bottom: -1px;
     left: 0;
-    width: 0;
+    width: calc(100% - 1.1rem);
     height: 1px;
     background: var(--white);
-    transition: width var(--transition-hover);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition-hover);
 }
 
 .overlay-locked-contact:hover { color: var(--white); }
-.overlay-locked-contact:hover::after { width: calc(100% - 1.1rem); }
+.overlay-locked-contact:hover::after { transform: scaleX(1); }
 
 .overlay-locked-contact .arrow {
     font-size: var(--text-sm);
